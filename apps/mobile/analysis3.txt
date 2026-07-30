@@ -1,0 +1,61 @@
+Analyzing mobile...                                             
+
+warning • Unnecessary cast • lib/app/router.dart:63:19 • unnecessary_cast
+   info • 'background' is deprecated and shouldn't be used. Use surface instead. This feature was deprecated after v3.18.0-0.1.pre • lib/core/theme/app_theme.dart:26:9 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/theme/app_theme.dart:52:33 • deprecated_member_use
+   info • 'background' is deprecated and shouldn't be used. Use surface instead. This feature was deprecated after v3.18.0-0.1.pre • lib/core/theme/app_theme.dart:76:9 • deprecated_member_use
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/auth/repositories/auth_repository.dart:30:9 • use_null_aware_elements
+warning • The value of the field '_currentBookingId' isn't used • lib/features/booking/presentation/checkout_screen.dart:42:11 • unused_field
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/checkout_screen.dart:344:29 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/checkout_screen.dart:558:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/checkout_screen.dart:594:46 • deprecated_member_use
+   info • Use 'const' with the constructor to improve performance • lib/features/booking/presentation/checkout_screen.dart:737:15 • prefer_const_constructors
+  error • Invalid constant value • lib/features/booking/presentation/checkout_screen.dart:761:31 • invalid_constant
+  error • The getter 'black' isn't defined for the type 'FontWeight' • lib/features/booking/presentation/checkout_screen.dart:761:42 • undefined_getter
+  error • A value of type 'Null' can't be returned from the function 'isPositive' because it has a return type of 'bool' • lib/features/booking/presentation/checkout_screen.dart:855:26 • return_of_invalid_type
+warning • Unused import: 'package:intl/intl.dart' • lib/features/booking/presentation/my_bookings_screen.dart:4:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/my_bookings_screen.dart:195:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/my_bookings_screen.dart:206:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/my_bookings_screen.dart:277:47 • deprecated_member_use
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/booking/repositories/booking_repository.dart:13:9 • use_null_aware_elements
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/notification/presentation/notifications_screen.dart:138:42 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/notification/presentation/notifications_screen.dart:138:74 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/notification/presentation/notifications_screen.dart:149:38 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/owner/presentation/add_turf_screen.dart:236:11 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/owner/presentation/owner_dashboard_screen.dart:240:45 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/owner/presentation/owner_dashboard_screen.dart:627:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/owner/presentation/owner_dashboard_screen.dart:849:53 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/owner/presentation/owner_dashboard_screen.dart:914:19 • deprecated_member_use
+   info • Use 'const' for final variables initialized to a constant value • lib/features/owner/presentation/owner_dashboard_screen.dart:1031:5 • prefer_const_declarations
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/owner/repositories/owner_repository.dart:94:9 • use_null_aware_elements
+   info • 'background' is deprecated and shouldn't be used. Use surface instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/turf/presentation/home_screen.dart:32:44 • deprecated_member_use
+warning • The value of the local variable 'primaryColor' isn't used • lib/features/turf/presentation/home_screen.dart:84:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/home_screen.dart:351:39 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/home_screen.dart:421:39 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/home_screen.dart:515:51 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/home_screen.dart:801:51 • deprecated_member_use
+warning • The value of the local variable 'theme' isn't used • lib/features/turf/presentation/search_screen.dart:190:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/search_screen.dart:293:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/search_screen.dart:368:53 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/search_screen.dart:616:37 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:170:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:184:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:278:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:514:34 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:518:34 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:743:43 • deprecated_member_use
+warning • The value of the local variable 'primaryColor' isn't used • lib/features/turf/presentation/turf_list_screen.dart:30:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_list_screen.dart:340:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_list_screen.dart:353:30 • deprecated_member_use
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/turf/repositories/turf_repository.dart:35:11 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/turf/repositories/turf_repository.dart:36:11 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/turf/repositories/turf_repository.dart:37:11 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/turf/repositories/turf_repository.dart:84:11 • use_null_aware_elements
+warning • The value of the local variable 'primaryColor' isn't used • lib/features/wallet/presentation/wallet_screen.dart:26:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:124:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:124:65 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:217:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:217:92 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:259:37 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:316:37 • deprecated_member_use
+

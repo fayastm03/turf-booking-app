@@ -1,0 +1,16 @@
+{
+  "name": "turf-booking-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Turf Booking System Monorepo",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "api:dev": "npm run dev --workspace=apps/api",
+    "api:build": "npm run build --workspace=apps/api",
+    "api:start": "npm run start --workspace=apps/api",
+    "prisma:generate": "npm run prisma:generate --workspace=apps/api",
+    "prisma:migrate": "npm run prisma:migrate --workspace=apps/api"
+  }
+}

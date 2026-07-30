@@ -1,0 +1,86 @@
+Analyzing mobile...                                             
+
+warning • Unnecessary cast • lib/app/router.dart:60:19 • unnecessary_cast
+  error • The function 'getIt' isn't defined • lib/app/router.dart:105:47 • undefined_function
+  error • The name 'TurfRepository' isn't a type, so it can't be used as a type argument • lib/app/router.dart:105:53 • non_type_as_type_argument
+  error • The name 'Turf' isn't a type, so it can't be used in an 'as' expression • lib/app/router.dart:115:40 • cast_to_non_type
+  error • The name 'Slot' isn't a type, so it can't be used in an 'as' expression • lib/app/router.dart:116:40 • cast_to_non_type
+   info • 'background' is deprecated and shouldn't be used. Use surface instead. This feature was deprecated after v3.18.0-0.1.pre • lib/core/theme/app_theme.dart:26:9 • deprecated_member_use
+  error • The argument type 'CardTheme' can't be assigned to the parameter type 'CardThemeData?'.  • lib/core/theme/app_theme.dart:42:18 • argument_type_not_assignable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/theme/app_theme.dart:52:33 • deprecated_member_use
+   info • 'background' is deprecated and shouldn't be used. Use surface instead. This feature was deprecated after v3.18.0-0.1.pre • lib/core/theme/app_theme.dart:76:9 • deprecated_member_use
+  error • The argument type 'CardTheme' can't be assigned to the parameter type 'CardThemeData?'.  • lib/core/theme/app_theme.dart:92:18 • argument_type_not_assignable
+  error • The getter 'black' isn't defined for the type 'FontWeight' • lib/features/auth/presentation/login_screen.dart:78:50 • undefined_getter
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/auth/repositories/auth_repository.dart:30:9 • use_null_aware_elements
+warning • The value of the field '_currentBookingId' isn't used • lib/features/booking/presentation/checkout_screen.dart:42:11 • unused_field
+  error • The getter 'isPositive' isn't defined for the type 'int' • lib/features/booking/presentation/checkout_screen.dart:252:71 • undefined_getter
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/checkout_screen.dart:294:29 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/checkout_screen.dart:467:42 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/checkout_screen.dart:495:58 • deprecated_member_use
+   info • Use 'const' with the constructor to improve performance • lib/features/booking/presentation/checkout_screen.dart:583:15 • prefer_const_constructors
+  error • Invalid constant value • lib/features/booking/presentation/checkout_screen.dart:600:87 • invalid_constant
+  error • The getter 'black' isn't defined for the type 'FontWeight' • lib/features/booking/presentation/checkout_screen.dart:600:98 • undefined_getter
+warning • Unused import: 'package:intl/intl.dart' • lib/features/booking/presentation/my_bookings_screen.dart:4:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/my_bookings_screen.dart:195:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/my_bookings_screen.dart:206:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/booking/presentation/my_bookings_screen.dart:277:47 • deprecated_member_use
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/booking/repositories/booking_repository.dart:13:9 • use_null_aware_elements
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/notification/presentation/notifications_screen.dart:138:42 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/notification/presentation/notifications_screen.dart:138:74 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/notification/presentation/notifications_screen.dart:149:38 • deprecated_member_use
+  error • The getter 'black' isn't defined for the type 'FontWeight' • lib/features/notification/presentation/notifications_screen.dart:160:53 • undefined_getter
+  error • The getter 'white87' isn't defined for the type 'Colors' • lib/features/notification/presentation/notifications_screen.dart:177:40 • undefined_getter
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/owner/presentation/add_turf_screen.dart:236:11 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/owner/presentation/owner_dashboard_screen.dart:239:45 • deprecated_member_use
+  error • Invalid constant value • lib/features/owner/presentation/owner_dashboard_screen.dart:459:83 • invalid_constant
+  error • The getter 'black' isn't defined for the type 'FontWeight' • lib/features/owner/presentation/owner_dashboard_screen.dart:459:94 • undefined_getter
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/owner/presentation/owner_dashboard_screen.dart:626:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/owner/presentation/owner_dashboard_screen.dart:848:53 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/owner/presentation/owner_dashboard_screen.dart:913:19 • deprecated_member_use
+  error • The getter 'ltr' isn't defined for the type 'TextDirection' • lib/features/owner/presentation/owner_dashboard_screen.dart:1013:66 • undefined_getter
+   info • Use 'const' for final variables initialized to a constant value • lib/features/owner/presentation/owner_dashboard_screen.dart:1030:5 • prefer_const_declarations
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/owner/repositories/owner_repository.dart:94:9 • use_null_aware_elements
+   info • 'background' is deprecated and shouldn't be used. Use surface instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/turf/presentation/home_screen.dart:32:44 • deprecated_member_use
+warning • The value of the local variable 'primaryColor' isn't used • lib/features/turf/presentation/home_screen.dart:84:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/home_screen.dart:351:39 • deprecated_member_use
+  error • The getter 'black' isn't defined for the type 'FontWeight' • lib/features/turf/presentation/home_screen.dart:385:38 • undefined_getter
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/home_screen.dart:421:39 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/home_screen.dart:515:51 • deprecated_member_use
+  error • Undefined name 'state' • lib/features/turf/presentation/home_screen.dart:661:32 • undefined_identifier
+  error • The body might complete normally, causing 'null' to be returned, but the return type, 'IconData', is a potentially non-nullable type • lib/features/turf/presentation/home_screen.dart:756:12 • body_might_complete_normally
+  error • The getter 'name' isn't defined for the type 'Map<String, dynamic>' • lib/features/turf/presentation/home_screen.dart:785:29 • undefined_getter
+  error • The getter 'email' isn't defined for the type 'Map<String, dynamic>' • lib/features/turf/presentation/home_screen.dart:786:30 • undefined_getter
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/home_screen.dart:801:51 • deprecated_member_use
+warning • The value of the local variable 'theme' isn't used • lib/features/turf/presentation/search_screen.dart:190:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/search_screen.dart:293:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/search_screen.dart:368:53 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/search_screen.dart:616:37 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:170:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:184:43 • deprecated_member_use
+  error • The getter 'black' isn't defined for the type 'FontWeight' • lib/features/turf/presentation/turf_detail_screen.dart:270:38 • undefined_getter
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:278:33 • deprecated_member_use
+  error • The getter 'black' isn't defined for the type 'FontWeight' • lib/features/turf/presentation/turf_detail_screen.dart:467:46 • undefined_getter
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:514:34 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:518:34 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_detail_screen.dart:743:43 • deprecated_member_use
+warning • The value of the local variable 'primaryColor' isn't used • lib/features/turf/presentation/turf_list_screen.dart:30:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_list_screen.dart:340:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/turf/presentation/turf_list_screen.dart:353:30 • deprecated_member_use
+warning • The method doesn't override an inherited method • lib/features/turf/presentation/turf_list_screen.dart:363:10 • override_on_non_overriding_member
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/turf/repositories/turf_repository.dart:35:11 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/turf/repositories/turf_repository.dart:36:11 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/turf/repositories/turf_repository.dart:37:11 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/turf/repositories/turf_repository.dart:84:11 • use_null_aware_elements
+warning • The value of the local variable 'primaryColor' isn't used • lib/features/wallet/presentation/wallet_screen.dart:26:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:124:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:124:65 • deprecated_member_use
+  error • Invalid constant value • lib/features/wallet/presentation/wallet_screen.dart:142:83 • invalid_constant
+  error • The getter 'black' isn't defined for the type 'FontWeight' • lib/features/wallet/presentation/wallet_screen.dart:142:94 • undefined_getter
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:217:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:217:92 • deprecated_member_use
+  error • The getter 'black' isn't defined for the type 'FontWeight' • lib/features/wallet/presentation/wallet_screen.dart:234:75 • undefined_getter
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:259:37 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/wallet/presentation/wallet_screen.dart:316:37 • deprecated_member_use
+  error • The name 'LocalStorage' isn't a type, so it can't be used as a type argument • lib/main.dart:28:15 • non_type_as_type_argument
+  error • The name 'LocalStorage' isn't a type, so it can't be used as a type argument • lib/main.dart:50:74 • non_type_as_type_argument
+

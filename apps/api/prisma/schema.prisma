@@ -1,0 +1,482 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum SystemRole {
+  USER
+  OWNER
+  ADMIN
+  SUPERADMIN
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum TurfStatus {
+  DRAFT
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum SlotStatus {
+  AVAILABLE
+  HELD
+  BOOKED
+  BLOCKED
+}
+
+enum BookingStatus {
+  PENDING_PAYMENT
+  CONFIRMED
+  CANCELLED
+  EXPIRED
+  REFUNDED
+}
+
+enum OfferScope {
+  PLATFORM
+  TURF
+}
+
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  RAZORPAY
+  STRIPE
+  WALLET
+}
+
+enum TransactionType {
+  BOOKING_CHARGE
+  WALLET_CREDIT
+  WALLET_DEBIT
+  BOOKING_REFUND
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  passwordHash     String
+  name             String
+  phone            String?
+  roles            SystemRole[]      @default([USER])
+  status           String            @default("ACTIVE") // ACTIVE, SUSPENDED
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  ownerApplication OwnerApplication?
+  turfs            Turf[]            @relation("OwnerTurfs")
+  bookings         Booking[]
+  wallet           Wallet?
+  transactions     Transaction[]
+  reviews          Review[]
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+  supportTickets   SupportTicket[]
+  supportMessages  SupportMessage[]
+  staff            Staff[]
+
+  @@map("users")
+}
+
+model OwnerApplication {
+  id           String            @id @default(uuid())
+  userId       String            @unique
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName String
+  documents    Document[]
+  status       ApplicationStatus @default(PENDING)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@map("owner_applications")
+}
+
+model Document {
+  id                 String            @id @default(uuid())
+  name               String
+  url                String
+  ownerApplicationId String
+  ownerApplication   OwnerApplication  @relation(fields: [ownerApplicationId], references: [id], onDelete: Cascade)
+  createdAt          DateTime          @default(now())
+
+  @@map("documents")
+}
+
+model City {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  state     String
+  isActive  Boolean  @default(true)
+  turfs     Turf[]
+  offers    Offer[]  @relation("OfferCities")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cities")
+}
+
+model Sport {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  iconUrl   String?
+  isActive  Boolean  @default(true)
+  courts    Court[]  @relation("CourtSports")
+  offers    Offer[]  @relation("OfferSports")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sports")
+}
+
+model Amenity {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  iconUrl   String?
+  turfs     Turf[]   @relation("TurfAmenities")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("amenities")
+}
+
+model Turf {
+  id                  String        @id @default(uuid())
+  ownerId             String
+  owner               User          @relation("OwnerTurfs", fields: [ownerId], references: [id], onDelete: Cascade)
+  name                String
+  description         String
+  address             String
+  cityId              String
+  city                City          @relation(fields: [cityId], references: [id], onDelete: Restrict)
+  lat                 Float?
+  lng                 Float?
+  images              Image[]
+  amenities           Amenity[]     @relation("TurfAmenities")
+  basePricePerHour    Float
+  status              TurfStatus    @default(DRAFT)
+  openingTime         String        // e.g. "06:00"
+  closingTime         String        // e.g. "23:00"
+  slotDurationMinutes Int           @default(60)
+  courts              Court[]
+  offers              Offer[]       @relation("OfferTurfs")
+  reviews             Review[]
+  staff               Staff[]
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@map("turfs")
+}
+
+model Court {
+  id            String         @id @default(uuid())
+  turfId        String
+  turf          Turf           @relation(fields: [turfId], references: [id], onDelete: Cascade)
+  name          String
+  type          String         // e.g. "Indoor", "Outdoor"
+  sports        Sport[]        @relation("CourtSports")
+  pricePerHour  Float
+  isActive      Boolean        @default(true)
+  slots         Slot[]
+  slotTemplates SlotTemplate[]
+  bookings      Booking[]
+  blockedSlots  BlockedSlot[]
+  images        Image[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@map("courts")
+}
+
+model SlotTemplate {
+  id            String   @id @default(uuid())
+  courtId       String
+  court         Court    @relation(fields: [courtId], references: [id], onDelete: Cascade)
+  dayOfWeek     Int      // 0 = Sunday, 1 = Monday...
+  startTime     String   // e.g. "06:00"
+  endTime       String   // e.g. "07:00"
+  priceOverride Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("slot_templates")
+}
+
+model Slot {
+  id        String      @id @default(uuid())
+  courtId   String
+  court     Court       @relation(fields: [courtId], references: [id], onDelete: Cascade)
+  date      String      // YYYY-MM-DD
+  startTime String      // e.g. "06:00"
+  endTime   String      // e.g. "07:00"
+  price     Float
+  status    SlotStatus  @default(AVAILABLE)
+  bookings  Booking[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@unique([courtId, date, startTime])
+  @@map("slots")
+}
+
+model Booking {
+  id                String        @id @default(uuid())
+  userId            String
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courtId           String
+  court             Court         @relation(fields: [courtId], references: [id], onDelete: Cascade)
+  slotId            String
+  slot              Slot          @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  status            BookingStatus @default(PENDING_PAYMENT)
+  amount            Float
+  offerId           String?
+  offer             Offer?        @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  razorpayOrderId   String        @unique
+  razorpayPaymentId String?
+  razorpayRefundId  String?
+  payments          Payment[]
+  transactions      Transaction[]
+  cancelledAt       DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@map("bookings")
+}
+
+model Payment {
+  id               String        @id @default(uuid())
+  bookingId        String
+  booking          Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  amount           Float
+  currency         String        @default("INR")
+  status           PaymentStatus @default(PENDING)
+  method           PaymentMethod
+  gatewayPaymentId String?       @unique
+  gatewayOrderId   String?
+  gatewayRefundId  String?       @unique
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@map("payments")
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  walletId    String?
+  wallet      Wallet?         @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  bookingId   String?
+  booking     Booking?        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  type        TransactionType
+  amount      Float
+  description String?
+  createdAt   DateTime        @default(now())
+
+  @@map("transactions")
+}
+
+model Wallet {
+  id           String        @id @default(uuid())
+  userId       String        @unique
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance      Float         @default(0.0)
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("wallets")
+}
+
+model Offer {
+  id               String       @id @default(uuid())
+  scope            OfferScope
+  title            String
+  code             String       @unique
+  discountType     DiscountType
+  value            Float
+  validFrom        DateTime
+  validTo          DateTime
+  minBookingAmount Float?
+  isActive         Boolean      @default(true)
+  cities           City[]       @relation("OfferCities")
+  sports           Sport[]      @relation("OfferSports")
+  turfs            Turf[]       @relation("OfferTurfs")
+  bookings         Booking[]
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@map("offers")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  turfId    String
+  turf      Turf     @relation(fields: [turfId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("reviews")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  type      String
+  isRead    Boolean  @default(false)
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  url       String
+  publicId  String?
+  turfId    String?
+  turf      Turf?    @relation(fields: [turfId], references: [id], onDelete: Cascade)
+  courtId   String?
+  court     Court?   @relation(fields: [courtId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("images")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String?
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+model SupportTicket {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  status    TicketStatus     @default(OPEN)
+  priority  TicketPriority   @default(MEDIUM)
+  messages  SupportMessage[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@map("support_tickets")
+}
+
+model SupportMessage {
+  id        String        @id @default(uuid())
+  ticketId  String
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  message   String
+  createdAt DateTime      @default(now())
+
+  @@map("support_messages")
+}
+
+model Role {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  description String?
+  permissions Permission[]
+  staff       Staff[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  roles       Role[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("permissions")
+}
+
+model Staff {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  turfId    String
+  turf      Turf     @relation(fields: [turfId], references: [id], onDelete: Cascade)
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, turfId])
+  @@map("staff")
+}
+
+model BlockedSlot {
+  id        String   @id @default(uuid())
+  courtId   String
+  court     Court    @relation(fields: [courtId], references: [id], onDelete: Cascade)
+  date      String
+  startTime String
+  endTime   String
+  reason    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("blocked_slots")
+}
+
+model PaymentEvent {
+  razorpayEventId String   @id
+  payload         Json
+  processedAt     DateTime @default(now())
+
+  @@map("payment_events")
+}
