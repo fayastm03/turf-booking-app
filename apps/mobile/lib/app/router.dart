@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/features/turf/domain/turf_models.dart';
+import 'package:mobile/features/turf/repositories/turf_repository.dart';
+import 'package:mobile/injection.dart';
 import '../features/auth/bloc/auth_bloc.dart';
 
 import '../features/auth/presentation/login_screen.dart';
@@ -15,9 +18,6 @@ import '../features/owner/presentation/add_turf_screen.dart';
 import '../features/booking/presentation/checkout_screen.dart';
 import '../features/booking/presentation/my_bookings_screen.dart';
 import '../features/wallet/presentation/wallet_screen.dart';
-import '../injection.dart';
-import '../features/turf/repositories/turf_repository.dart';
-import '../features/turf/domain/turf_models.dart';
 
 // Import screens (we will stub these screens to make sure the router compiles perfectly)
 // To keep things simple and avoid circular reference issues, we define stub screens in a widgets file or in this router file directly.
@@ -75,14 +75,8 @@ final GoRouter appRouter = GoRouter(
     return null;
   },
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const HomeScreen(),
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
+    GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(
       path: '/register',
       builder: (context, state) => const RegisterScreen(),
@@ -105,7 +99,8 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         final id = state.pathParameters['id'] ?? '';
         return BlocProvider<TurfDetailBloc>(
-          create: (context) => TurfDetailBloc(getIt<TurfRepository>())..add(LoadTurfDetails(id)),
+          create: (context) =>
+              TurfDetailBloc(getIt<TurfRepository>())..add(LoadTurfDetails(id)),
           child: TurfDetailScreen(turfId: id),
         );
       },
@@ -117,21 +112,14 @@ final GoRouter appRouter = GoRouter(
         final extra = state.extra as Map<String, dynamic>?;
         final turf = extra?['turf'] as Turf;
         final slot = extra?['slot'] as Slot;
-        return CheckoutScreen(
-          slotId: slotId,
-          turf: turf,
-          slot: slot,
-        );
+        return CheckoutScreen(slotId: slotId, turf: turf, slot: slot);
       },
     ),
     GoRoute(
       path: '/my-bookings',
       builder: (context, state) => const MyBookingsScreen(),
     ),
-    GoRoute(
-      path: '/wallet',
-      builder: (context, state) => const WalletScreen(),
-    ),
+    GoRoute(path: '/wallet', builder: (context, state) => const WalletScreen()),
     GoRoute(
       path: '/notifications',
       builder: (context, state) => const NotificationsScreen(),

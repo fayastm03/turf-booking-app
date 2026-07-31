@@ -780,11 +780,16 @@ class _ProfileSettingsContent extends StatelessWidget {
         String name = 'Guest User';
         String email = 'Sign in to access settings';
         bool isLoggedIn = false;
+        bool isPartner = false;
 
         if (state is Authenticated) {
           name = state.user['name'] ?? 'Guest User';
           email = state.user['email'] ?? '';
           isLoggedIn = true;
+          final roles = state.user['roles'];
+          if (roles is List) {
+            isPartner = roles.contains('OWNER') || roles.contains('ADMIN');
+          }
         }
 
         return SingleChildScrollView(
@@ -833,12 +838,13 @@ class _ProfileSettingsContent extends StatelessWidget {
                   subtitle: 'Manage card credits & top-ups',
                   onTap: () => context.push('/wallet'),
                 ),
-                _buildSettingsTile(
-                  icon: Icons.business_outlined,
-                  title: 'Manage Facilities (Partner Mode)',
-                  subtitle: 'Register fields & manage courts',
-                  onTap: () => context.push('/owner'),
-                ),
+                if (isPartner)
+                  _buildSettingsTile(
+                    icon: Icons.business_outlined,
+                    title: 'Manage Facilities (Partner Mode)',
+                    subtitle: 'Register fields & manage courts',
+                    onTap: () => context.push('/owner'),
+                  ),
                 const Divider(height: 32, color: Colors.white10),
                 _buildSettingsTile(
                   icon: Icons.logout,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/core/storage/local_storage.dart';
 import 'app/router.dart';
 import 'injection.dart';
-import 'core/storage/local_storage.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/repositories/auth_repository.dart';
 import 'features/booking/bloc/booking_bloc.dart';
@@ -21,13 +21,13 @@ import 'core/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Set up dependency injection locator
   setupLocator();
 
   // Initialize local key-value databases
   await getIt<LocalStorage>().init();
-  
+
   runApp(const MyApp());
 }
 
@@ -39,32 +39,41 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(getIt<AuthRepository>())..add(AppStarted()),
+          create: (context) =>
+              AuthBloc(getIt<AuthRepository>())..add(AppStarted()),
         ),
         BlocProvider<BookingBloc>(
           create: (context) => BookingBloc(getIt<BookingRepository>()),
         ),
         BlocProvider<HomeBloc>(
-          create: (context) => HomeBloc(getIt<TurfRepository>())..add(LoadHomeData()),
+          create: (context) =>
+              HomeBloc(getIt<TurfRepository>())..add(LoadHomeData()),
         ),
         BlocProvider<SearchBloc>(
-          create: (context) => SearchBloc(getIt<TurfRepository>(), getIt<LocalStorage>())..add(LoadSearchInit()),
+          create: (context) =>
+              SearchBloc(getIt<TurfRepository>(), getIt<LocalStorage>())
+                ..add(LoadSearchInit()),
         ),
         BlocProvider<WalletBloc>(
-          create: (context) => WalletBloc(getIt<WalletRepository>())..add(LoadWallet()),
+          create: (context) =>
+              WalletBloc(getIt<WalletRepository>())..add(LoadWallet()),
         ),
         BlocProvider<NotificationBloc>(
-          create: (context) => NotificationBloc(getIt<NotificationRepository>())..add(LoadNotifications()),
+          create: (context) =>
+              NotificationBloc(getIt<NotificationRepository>())
+                ..add(LoadNotifications()),
         ),
         BlocProvider<OwnerBloc>(
-          create: (context) => OwnerBloc(getIt<OwnerRepository>())..add(LoadOwnerTurfs()),
+          create: (context) =>
+              OwnerBloc(getIt<OwnerRepository>())..add(LoadOwnerTurfs()),
         ),
       ],
       child: MaterialApp.router(
         title: 'Turf Booking System',
         debugShowCheckedModeBanner: false,
         routerConfig: appRouter,
-        themeMode: ThemeMode.dark, // Default to dark mode but allow system matching
+        themeMode:
+            ThemeMode.dark, // Default to dark mode but allow system matching
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
       ),

@@ -31,12 +31,11 @@ const fastify = Fastify({
   },
 });
 
-// Configure Content Type Parser to preserve raw body for signature validation
 fastify.addContentTypeParser('application/json', { parseAs: 'string' }, (request, body, done) => {
   const bodyStr = typeof body === 'string' ? body : (body as Buffer).toString('utf8');
   (request as any).rawBody = bodyStr;
   try {
-    const json = JSON.parse(bodyStr);
+    const json = bodyStr.trim() ? JSON.parse(bodyStr) : {};
     done(null, json);
   } catch (err: any) {
     done(err, null);

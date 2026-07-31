@@ -49,6 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 backgroundColor: theme.colorScheme.error,
               ),
             );
+          } else if (state is Authenticated) {
+            context.go('/');
           }
         },
         builder: (context, state) {

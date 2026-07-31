@@ -62,6 +62,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 backgroundColor: theme.colorScheme.error,
               ),
             );
+          } else if (state is Authenticated) {
+            context.go('/');
           }
         },
         builder: (context, state) {
