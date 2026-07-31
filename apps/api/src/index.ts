@@ -13,6 +13,7 @@ import { walletRoutes } from './modules/wallets/wallet.controller';
 import { bookingRoutes } from './modules/bookings/booking.controller';
 import { webhookRoutes } from './modules/payments/razorpay.webhook';
 import { offerRoutes } from './modules/offers/offer.controller';
+import { notificationRoutes } from './modules/notifications/notification.controller';
 import { globalErrorHandler } from './middleware/error';
 import { cleanupExpiredBookings } from './modules/bookings/booking.service';
 
@@ -71,6 +72,7 @@ async function main() {
   await fastify.register(offerRoutes, { prefix: '/offers' });
   await fastify.register(reviewRoutes);
   await fastify.register(walletRoutes);
+  await fastify.register(notificationRoutes);
 
   // Centralized Global Error Handler
   fastify.setErrorHandler(globalErrorHandler);
