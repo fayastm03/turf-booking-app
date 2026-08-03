@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../bloc/owner_bloc.dart';
+import '../../turf/bloc/home_bloc.dart';
+import '../../turf/domain/turf_models.dart';
 
 class AddTurfScreen extends StatefulWidget {
   const AddTurfScreen({super.key});
@@ -19,8 +21,7 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
   final _openController = TextEditingController(text: "06:00");
   final _closeController = TextEditingController(text: "23:00");
 
-  String _selectedCityId =
-      'c0a37340-dfbd-497b-83c8-ee1bc7f0b5d9'; // Default Mumbai
+  String _selectedCityId = '';
 
   @override
   void dispose() {
@@ -197,10 +198,7 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
                                     images: const [
                                       'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=600&auto=format&fit=crop&q=80',
                                     ],
-                                    amenities: const [
-                                      'a0c1c2d3-e4f5-0123-4567-89abcdef0123', // WiFi seed
-                                      'a1c1c2d3-e4f5-0123-4567-89abcdef0123', // Parking seed
-                                    ],
+                                    amenities: const [],
                                   ),
                                 );
                               }
@@ -263,11 +261,27 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
   }
 
   Widget _buildCityDropdown(ThemeData theme) {
-    final cities = [
-      {'id': 'c0a37340-dfbd-497b-83c8-ee1bc7f0b5d9', 'name': 'Mumbai'},
-      {'id': 'c1a27340-dfbd-497b-83c8-ee1bc7f0b5d9', 'name': 'Bangalore'},
-      {'id': 'c2a27340-dfbd-497b-83c8-ee1bc7f0b5d9', 'name': 'Delhi'},
-    ];
+    final homeState = context.read<HomeBloc>().state;
+    List<City> cities = [];
+    if (homeState is HomeLoaded) {
+      cities = homeState.cities;
+    }
+
+    if (cities.isEmpty) {
+      return Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF151D30),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white10),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: const Text('Loading cities...', style: TextStyle(color: Colors.white70)),
+      );
+    }
+
+    if (_selectedCityId.isEmpty || !cities.any((c) => c.id == _selectedCityId)) {
+      _selectedCityId = cities.first.id;
+    }
 
     return Container(
       decoration: BoxDecoration(
@@ -278,7 +292,7 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: DropdownButtonHideUnderline(
         child: DropdownButtonFormField<String>(
-          initialValue: _selectedCityId,
+          value: _selectedCityId,
           dropdownColor: const Color(0xFF151D30),
           style: const TextStyle(color: Colors.white),
           decoration: const InputDecoration(
@@ -287,8 +301,8 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
           ),
           items: cities.map((c) {
             return DropdownMenuItem<String>(
-              value: c['id'],
-              child: Text(c['name'] ?? ''),
+              value: c.id,
+              child: Text(c.name),
             );
           }).toList(),
           onChanged: (val) {
