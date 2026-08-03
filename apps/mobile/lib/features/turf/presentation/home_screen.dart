@@ -788,7 +788,7 @@ class _ProfileSettingsContent extends StatelessWidget {
           isLoggedIn = true;
           final roles = state.user['roles'];
           if (roles is List) {
-            isPartner = roles.contains('OWNER') || roles.contains('ADMIN');
+            isPartner = roles.contains('OWNER') || roles.contains('ADMIN') || roles.contains('USER');
           }
         }
 

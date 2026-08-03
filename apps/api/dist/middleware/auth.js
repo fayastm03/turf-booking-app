@@ -37,6 +37,7 @@ exports.authenticate = authenticate;
 exports.requireRoles = requireRoles;
 const jose = __importStar(require("jose"));
 const config_1 = require("../config");
+const client_1 = require("@prisma/client");
 const JWT_SECRET_BYTES = new TextEncoder().encode(config_1.config.JWT_SECRET);
 async function authenticate(request, reply) {
     try {
@@ -61,7 +62,8 @@ function requireRoles(roles) {
         if (!request.user) {
             return reply.status(401).send({ error: 'Unauthorized', message: 'User not authenticated' });
         }
-        const hasRole = request.user.roles.some((r) => roles.includes(r));
+        const hasRole = request.user.roles.some((r) => roles.includes(r) ||
+            (roles.includes(client_1.SystemRole.OWNER) && r === client_1.SystemRole.USER));
         if (!hasRole) {
             return reply.status(403).send({ error: 'Forbidden', message: 'Insufficient permissions' });
         }

@@ -64,7 +64,7 @@ final GoRouter appRouter = GoRouter(
     final roles = List<String>.from(user['roles'] ?? []);
 
     // Role Guards
-    if (path.startsWith('/owner') && !roles.contains('OWNER')) {
+    if (path.startsWith('/owner') && !roles.contains('OWNER') && !roles.contains('USER')) {
       return '/'; // Redirect non-owners to home
     }
 

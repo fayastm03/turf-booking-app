@@ -54,7 +54,7 @@ async function main() {
     // Redis-backed Rate Limiter
     await fastify.register(rate_limit_1.default, {
         redis: redis_1.redis,
-        max: 100, // 100 requests per minute per IP
+        max: process.env.NODE_ENV === 'production' ? 100 : 10000, // Large threshold in dev
         timeWindow: '1 minute',
     });
     // Root Health Check Route

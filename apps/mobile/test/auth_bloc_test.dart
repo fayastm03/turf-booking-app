@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:mobile/features/auth/repositories/auth_repository.dart';
-import 'package:mobile/core/network/api_client.dart';
 
 class MockAuthRepository implements AuthRepository {
   bool shouldFailProfile = false;

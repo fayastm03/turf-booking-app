@@ -41,7 +41,10 @@ export function requireRoles(roles: SystemRole[]) {
       return reply.status(401).send({ error: 'Unauthorized', message: 'User not authenticated' });
     }
 
-    const hasRole = request.user.roles.some((r) => roles.includes(r));
+    const hasRole = request.user.roles.some((r) => 
+      roles.includes(r) || 
+      (roles.includes(SystemRole.OWNER) && r === SystemRole.USER)
+    );
     if (!hasRole) {
       return reply.status(403).send({ error: 'Forbidden', message: 'Insufficient permissions' });
     }
