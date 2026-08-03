@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../bloc/booking_bloc.dart';
+import '../../auth/bloc/auth_bloc.dart';
 
 class MyBookingsScreen extends StatefulWidget {
   const MyBookingsScreen({super.key});
@@ -16,8 +17,10 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   @override
   void initState() {
     super.initState();
-    // Load bookings on mount
-    context.read<BookingBloc>().add(LoadMyBookingsRequested());
+    // Load bookings on mount if authenticated
+    if (context.read<AuthBloc>().state is Authenticated) {
+      context.read<BookingBloc>().add(LoadMyBookingsRequested());
+    }
   }
 
   @override
@@ -32,82 +35,134 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              context.read<BookingBloc>().add(LoadMyBookingsRequested());
+              if (context.read<AuthBloc>().state is Authenticated) {
+                context.read<BookingBloc>().add(LoadMyBookingsRequested());
+              }
             },
           ),
         ],
       ),
-      body: BlocConsumer<BookingBloc, BookingState>(
-        listener: (context, state) {
-          if (state is CancellationSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Reservation cancelled successfully'),
-                backgroundColor: Colors.green,
-              ),
-            );
-            // Refresh list
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, authState) {
+          if (authState is Authenticated) {
             context.read<BookingBloc>().add(LoadMyBookingsRequested());
           }
-
-          if (state is CancellationFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error),
-                backgroundColor: theme.colorScheme.error,
-              ),
-            );
-          }
         },
-        builder: (context, state) {
-          if (state is MyBookingsLoadInProgress ||
-              state is CancellationLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is MyBookingsLoadFailure) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Failed to load bookings: ${state.error}',
-                    style: const TextStyle(color: Colors.white70),
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, authState) {
+            if (authState is! Authenticated) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.calendar_today_outlined, size: 80, color: primaryColor.withOpacity(0.5)),
+                      const SizedBox(height: 24),
+                      Text(
+                        'Access Your Reservations',
+                        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Please sign in to view your upcoming bookings and reservation history.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white70, fontSize: 14),
+                      ),
+                      const SizedBox(height: 32),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () => context.go('/login'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor,
+                            foregroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          child: const Text('Sign In Now', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => context.read<BookingBloc>().add(
-                      LoadMyBookingsRequested(),
+                ),
+              );
+            }
+
+            return BlocConsumer<BookingBloc, BookingState>(
+              listener: (context, state) {
+                if (state is CancellationSuccess) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Reservation cancelled successfully'),
+                      backgroundColor: Colors.green,
                     ),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
+                  );
+                  // Refresh list
+                  context.read<BookingBloc>().add(LoadMyBookingsRequested());
+                }
+
+                if (state is CancellationFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.error),
+                      backgroundColor: theme.colorScheme.error,
+                    ),
+                  );
+                }
+              },
+              builder: (context, state) {
+                if (state is MyBookingsLoadInProgress ||
+                    state is CancellationLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (state is MyBookingsLoadFailure) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Failed to load bookings: ${state.error}',
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () => context.read<BookingBloc>().add(
+                            LoadMyBookingsRequested(),
+                          ),
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                if (state is MyBookingsLoadSuccess) {
+                  final filteredBookings = _filterBookings(state.bookings);
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      children: [
+                        // 1. Filter Chips Row
+                        _buildFilterChips(primaryColor),
+                        const SizedBox(height: 16),
+
+                        // 2. Bookings List Scroll
+                        Expanded(
+                          child: _buildBookingsList(context, filteredBookings, theme),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return const SizedBox.shrink();
+              },
             );
-          }
-
-          if (state is MyBookingsLoadSuccess) {
-            final filteredBookings = _filterBookings(state.bookings);
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  // 1. Filter Chips Row
-                  _buildFilterChips(primaryColor),
-                  const SizedBox(height: 16),
-
-                  // 2. Bookings List Scroll
-                  Expanded(
-                    child: _buildBookingsList(context, filteredBookings, theme),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return const SizedBox.shrink();
-        },
+          },
+        ),
       ),
     );
   }

@@ -4,9 +4,6 @@ import 'package:mobile/features/auth/repositories/auth_repository.dart';
 import 'package:mobile/core/network/api_client.dart';
 
 class MockAuthRepository implements AuthRepository {
-  @override
-  ApiClient get _apiClient => throw UnimplementedError();
-
   bool shouldFailProfile = false;
 
   @override
