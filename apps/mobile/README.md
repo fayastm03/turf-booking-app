@@ -1,4 +1,19 @@
-# mobile
+# Turf Spot mobile app
+
+## Local development
+
+Start the API and its PostgreSQL/Redis services first. On an Android emulator the
+app connects to `http://10.0.2.2:3000`; iOS simulators and web use
+`http://localhost:3000` by default. For a physical phone or a remote server,
+provide the reachable API address explicitly:
+
+```bash
+flutter run --dart-define=API_BASE_URL=http://192.168.x.x:3000
+```
+
+Use separate emails for player and turf-owner accounts. Owner sign-up creates a
+pending application; an administrator must approve it before Owner Login and
+the partner dashboard are available.
 
 A new Flutter project.
 

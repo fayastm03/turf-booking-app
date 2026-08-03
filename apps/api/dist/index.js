@@ -18,6 +18,7 @@ const wallet_controller_1 = require("./modules/wallets/wallet.controller");
 const booking_controller_1 = require("./modules/bookings/booking.controller");
 const razorpay_webhook_1 = require("./modules/payments/razorpay.webhook");
 const offer_controller_1 = require("./modules/offers/offer.controller");
+const notification_controller_1 = require("./modules/notifications/notification.controller");
 const error_1 = require("./middleware/error");
 const booking_service_1 = require("./modules/bookings/booking.service");
 const fastify = (0, fastify_1.default)({
@@ -33,12 +34,11 @@ const fastify = (0, fastify_1.default)({
             : undefined,
     },
 });
-// Configure Content Type Parser to preserve raw body for signature validation
 fastify.addContentTypeParser('application/json', { parseAs: 'string' }, (request, body, done) => {
     const bodyStr = typeof body === 'string' ? body : body.toString('utf8');
     request.rawBody = bodyStr;
     try {
-        const json = JSON.parse(bodyStr);
+        const json = bodyStr.trim() ? JSON.parse(bodyStr) : {};
         done(null, json);
     }
     catch (err) {
@@ -71,6 +71,7 @@ async function main() {
     await fastify.register(offer_controller_1.offerRoutes, { prefix: '/offers' });
     await fastify.register(review_controller_1.reviewRoutes);
     await fastify.register(wallet_controller_1.walletRoutes);
+    await fastify.register(notification_controller_1.notificationRoutes);
     // Centralized Global Error Handler
     fastify.setErrorHandler(error_1.globalErrorHandler);
     // Start Server

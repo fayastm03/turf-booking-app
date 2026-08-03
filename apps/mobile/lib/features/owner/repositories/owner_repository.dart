@@ -11,7 +11,9 @@ class OwnerRepository {
       final response = await _apiClient.dio.get('/owner/turfs');
       return response.data as List<dynamic>;
     } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Failed to load owner turfs');
+      throw Exception(
+        e.response?.data['message'] ?? 'Failed to load owner turfs',
+      );
     }
   }
 
@@ -27,20 +29,25 @@ class OwnerRepository {
     List<String> amenities = const [],
   }) async {
     try {
-      final response = await _apiClient.dio.post('/owner/turfs', data: {
-        'name': name,
-        'description': description,
-        'address': address,
-        'cityId': cityId,
-        'basePricePerHour': basePricePerHour,
-        'openingTime': openingTime,
-        'closingTime': closingTime,
-        'images': images,
-        'amenities': amenities,
-      });
+      final response = await _apiClient.dio.post(
+        '/owner/turfs',
+        data: {
+          'name': name,
+          'description': description,
+          'address': address,
+          'cityId': cityId,
+          'basePricePerHour': basePricePerHour,
+          'openingTime': openingTime,
+          'closingTime': closingTime,
+          'images': images,
+          'amenities': amenities,
+        },
+      );
       return response.data;
     } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Failed to register turf facility');
+      throw Exception(
+        e.response?.data['message'] ?? 'Failed to register turf facility',
+      );
     }
   }
 
@@ -52,47 +59,71 @@ class OwnerRepository {
     required List<String> sports,
   }) async {
     try {
-      final response = await _apiClient.dio.post('/owner/turfs/$turfId/courts', data: {
-        'name': name,
-        'type': type,
-        'pricePerHour': pricePerHour,
-        'sports': sports,
-      });
+      final response = await _apiClient.dio.post(
+        '/owner/turfs/$turfId/courts',
+        data: {
+          'name': name,
+          'type': type,
+          'pricePerHour': pricePerHour,
+          'sports': sports,
+        },
+      );
       return response.data;
     } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Failed to add court to turf');
+      throw Exception(
+        e.response?.data['message'] ?? 'Failed to add court to turf',
+      );
     }
   }
 
-  Future<dynamic> generateSlots(String turfId, String startDate, String endDate) async {
+  Future<dynamic> generateSlots(
+    String turfId,
+    String startDate,
+    String endDate,
+  ) async {
     try {
-      final response = await _apiClient.dio.post('/owner/turfs/$turfId/generate-slots', data: {
-        'startDate': startDate,
-        'endDate': endDate,
-      });
+      final response = await _apiClient.dio.post(
+        '/owner/turfs/$turfId/generate-slots',
+        data: {'startDate': startDate, 'endDate': endDate},
+      );
       return response.data;
     } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Failed to generate slots');
+      throw Exception(
+        e.response?.data['message'] ?? 'Failed to generate slots',
+      );
     }
   }
 
   Future<List<dynamic>> getCourtTemplates(String courtId) async {
     try {
-      final response = await _apiClient.dio.get('/owner/courts/$courtId/templates');
+      final response = await _apiClient.dio.get(
+        '/owner/courts/$courtId/templates',
+      );
       return response.data as List<dynamic>;
     } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Failed to load templates');
+      throw Exception(
+        e.response?.data['message'] ?? 'Failed to load templates',
+      );
     }
   }
 
-  Future<dynamic> createCourtTemplate(String courtId, int dayOfWeek, String start, String end, double? priceOverride) async {
+  Future<dynamic> createCourtTemplate(
+    String courtId,
+    int dayOfWeek,
+    String start,
+    String end,
+    double? priceOverride,
+  ) async {
     try {
-      final response = await _apiClient.dio.post('/owner/courts/$courtId/templates', data: {
-        'dayOfWeek': dayOfWeek,
-        'startTime': start,
-        'endTime': end,
-        if (priceOverride != null) 'priceOverride': priceOverride,
-      });
+      final response = await _apiClient.dio.post(
+        '/owner/courts/$courtId/templates',
+        data: {
+          'dayOfWeek': dayOfWeek,
+          'startTime': start,
+          'endTime': end,
+          'priceOverride': ?priceOverride,
+        },
+      );
       return response.data;
     } on DioException catch (e) {
       throw Exception(e.response?.data['message'] ?? 'Failed to save template');
@@ -104,7 +135,9 @@ class OwnerRepository {
       final response = await _apiClient.dio.get('/owner/analytics');
       return response.data as Map<String, dynamic>;
     } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Failed to load analytics statistics');
+      throw Exception(
+        e.response?.data['message'] ?? 'Failed to load analytics statistics',
+      );
     }
   }
 }

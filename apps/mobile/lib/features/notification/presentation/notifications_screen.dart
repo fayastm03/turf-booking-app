@@ -38,10 +38,23 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               if (state is NotificationLoaded && state.unreadCount > 0) {
                 return TextButton.icon(
                   onPressed: () {
-                    context.read<NotificationBloc>().add(MarkAllNotificationsAsRead());
+                    context.read<NotificationBloc>().add(
+                      MarkAllNotificationsAsRead(),
+                    );
                   },
-                  icon: const Icon(Icons.done_all, size: 16, color: Colors.green),
-                  label: const Text('Read All', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12)),
+                  icon: const Icon(
+                    Icons.done_all,
+                    size: 16,
+                    color: Colors.green,
+                  ),
+                  label: const Text(
+                    'Read All',
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
                 );
               }
               return const SizedBox.shrink();
@@ -60,10 +73,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Failed to load notifications: ${state.error}', style: const TextStyle(color: Colors.white70)),
+                  Text(
+                    'Failed to load notifications: ${state.error}',
+                    style: const TextStyle(color: Colors.white70),
+                  ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => context.read<NotificationBloc>().add(LoadNotifications()),
+                    onPressed: () => context.read<NotificationBloc>().add(
+                      LoadNotifications(),
+                    ),
                     child: const Text('Retry'),
                   ),
                 ],
@@ -79,11 +97,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.notifications_off_outlined, size: 64, color: Colors.white38),
+                    const Icon(
+                      Icons.notifications_off_outlined,
+                      size: 64,
+                      color: Colors.white38,
+                    ),
                     const SizedBox(height: 16),
                     const Text(
                       'All caught up!',
-                      style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 6),
                     const Text(
@@ -105,7 +131,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 context.read<NotificationBloc>().add(LoadNotifications());
               },
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 itemCount: notifications.length,
                 itemBuilder: (context, index) {
                   final notif = notifications[index];
@@ -121,7 +150,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
-  Widget _buildNotificationCard(BuildContext context, NotificationModel notif, Color primaryColor) {
+  Widget _buildNotificationCard(
+    BuildContext context,
+    NotificationModel notif,
+    Color primaryColor,
+  ) {
     final date = DateTime.parse(notif.createdAt);
     final formattedDate = DateFormat('MMM d, HH:mm').format(date);
 
@@ -135,18 +168,22 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         color: isUnread ? const Color(0xFF1B243B) : const Color(0xFF131A26),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isUnread ? primaryColor.withOpacity(0.3) : Colors.white.withOpacity(0.05),
+          color: isUnread
+              ? primaryColor.withValues(alpha: 0.3)
+              : Colors.white.withValues(alpha: 0.05),
           width: isUnread ? 1.2 : 1.0,
         ),
       ),
       child: ListTile(
         onTap: () {
           if (isUnread) {
-            context.read<NotificationBloc>().add(MarkNotificationAsRead(notif.id));
+            context.read<NotificationBloc>().add(
+              MarkNotificationAsRead(notif.id),
+            );
           }
         },
         leading: CircleAvatar(
-          backgroundColor: iconColor.withOpacity(0.1),
+          backgroundColor: iconColor.withValues(alpha: 0.1),
           child: Icon(leadingIcon, color: iconColor, size: 20),
         ),
         title: Row(

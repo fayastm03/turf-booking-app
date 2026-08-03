@@ -10,12 +10,7 @@ class TurfListScreen extends StatefulWidget {
   final String? cityId;
   final String? sportName;
 
-  const TurfListScreen({
-    super.key,
-    this.sportId,
-    this.cityId,
-    this.sportName,
-  });
+  const TurfListScreen({super.key, this.sportId, this.cityId, this.sportName});
 
   @override
   State<TurfListScreen> createState() => _TurfListScreenState();
@@ -26,9 +21,6 @@ class _TurfListScreenState extends State<TurfListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final primaryColor = theme.colorScheme.primary;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.sportName ?? 'Browse Fields'),
@@ -121,13 +113,16 @@ class _TurfListScreenState extends State<TurfListScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
                     child: CachedNetworkImage(
                       imageUrl: photoUrl,
                       height: 160,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(color: Colors.white10),
+                      placeholder: (context, url) =>
+                          Container(color: Colors.white10),
                     ),
                   ),
                   Padding(
@@ -169,11 +164,19 @@ class _TurfListScreenState extends State<TurfListScreen> {
                         const SizedBox(height: 12),
                         const Row(
                           children: [
-                            Icon(Icons.check_circle_outline, color: Colors.green, size: 16),
+                            Icon(
+                              Icons.check_circle_outline,
+                              color: Colors.green,
+                              size: 16,
+                            ),
                             SizedBox(width: 4),
                             Text(
                               'Available Today',
-                              style: TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
@@ -200,9 +203,7 @@ class _TurfListScreenState extends State<TurfListScreen> {
           color: const Color(0xFF0F172A), // Dark slate grid background
           width: double.infinity,
           height: double.infinity,
-          child: CustomPaint(
-            painter: _GridMapPainter(),
-          ),
+          child: CustomPaint(painter: _GridMapPainter()),
         ),
 
         // Pin markers
@@ -228,9 +229,14 @@ class _TurfListScreenState extends State<TurfListScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                        boxShadow: const [
+                          BoxShadow(color: Colors.black26, blurRadius: 4),
+                        ],
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       child: Text(
                         '₹${turf.basePricePerHour.toInt()}',
                         style: const TextStyle(
@@ -240,11 +246,7 @@ class _TurfListScreenState extends State<TurfListScreen> {
                         ),
                       ),
                     ),
-                    Icon(
-                      Icons.location_on,
-                      color: primaryColor,
-                      size: 32,
-                    ),
+                    Icon(Icons.location_on, color: primaryColor, size: 32),
                   ],
                 ),
               ),
@@ -273,7 +275,8 @@ class _TurfListScreenState extends State<TurfListScreen> {
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,
-                  errorWidget: (context, url, error) => Container(color: Colors.white10),
+                  errorWidget: (context, url, error) =>
+                      Container(color: Colors.white10),
                 ),
               ),
               const SizedBox(width: 16),
@@ -337,7 +340,7 @@ class _GridMapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.03)
+      ..color = Colors.white.withValues(alpha: 0.03)
       ..strokeWidth = 1.0;
 
     // Draw grid lines to simulate map coordinates
@@ -350,13 +353,25 @@ class _GridMapPainter extends CustomPainter {
 
     // Draw map-like streets paths
     final roadPaint = Paint()
-      ..color = Colors.white.withOpacity(0.08)
+      ..color = Colors.white.withValues(alpha: 0.08)
       ..strokeWidth = 24.0
       ..strokeCap = StrokeCap.round;
 
-    canvas.drawLine(Offset(0, size.height * 0.4), Offset(size.width, size.height * 0.4), roadPaint);
-    canvas.drawLine(Offset(size.width * 0.3, 0), Offset(size.width * 0.3, size.height), roadPaint);
-    canvas.drawLine(Offset(size.width * 0.7, 0), Offset(size.width * 0.7, size.height), roadPaint);
+    canvas.drawLine(
+      Offset(0, size.height * 0.4),
+      Offset(size.width, size.height * 0.4),
+      roadPaint,
+    );
+    canvas.drawLine(
+      Offset(size.width * 0.3, 0),
+      Offset(size.width * 0.3, size.height),
+      roadPaint,
+    );
+    canvas.drawLine(
+      Offset(size.width * 0.7, 0),
+      Offset(size.width * 0.7, size.height),
+      roadPaint,
+    );
   }
 
   @override

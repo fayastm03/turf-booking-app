@@ -46,13 +46,19 @@ async function authRoutes(fastify, options) {
             password: zod_1.z.string().min(6),
             name: zod_1.z.string().min(2),
             phone: zod_1.z.string().optional(),
+            accountType: zod_1.z.enum(['USER', 'OWNER']).default('USER'),
+            businessName: zod_1.z.string().min(3).optional(),
+        }).superRefine((data, ctx) => {
+            if (data.accountType === 'OWNER' && !data.businessName) {
+                ctx.addIssue({ code: zod_1.z.ZodIssueCode.custom, path: ['businessName'], message: 'Business name is required for turf owners' });
+            }
         });
         const parsed = registerSchema.safeParse(request.body);
         if (!parsed.success) {
             return reply.status(400).send({ error: 'Bad Request', message: parsed.error.format() });
         }
         try {
-            const tokens = await authService.register(parsed.data.email, parsed.data.password, parsed.data.name, parsed.data.phone);
+            const tokens = await authService.register(parsed.data.email, parsed.data.password, parsed.data.name, parsed.data.phone, parsed.data.accountType, parsed.data.businessName);
             return reply.status(201).send(tokens);
         }
         catch (err) {
@@ -64,13 +70,14 @@ async function authRoutes(fastify, options) {
         const loginSchema = zod_1.z.object({
             email: zod_1.z.string().email(),
             password: zod_1.z.string(),
+            accountType: zod_1.z.enum(['USER', 'OWNER']).default('USER'),
         });
         const parsed = loginSchema.safeParse(request.body);
         if (!parsed.success) {
             return reply.status(400).send({ error: 'Bad Request', message: parsed.error.format() });
         }
         try {
-            const result = await authService.login(parsed.data.email, parsed.data.password);
+            const result = await authService.login(parsed.data.email, parsed.data.password, parsed.data.accountType);
             return reply.status(200).send(result);
         }
         catch (err) {

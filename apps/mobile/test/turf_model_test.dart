@@ -39,10 +39,15 @@ void main() {
           'isActive': true,
         },
         'images': [
-          {'id': 'img-1', 'url': 'http://image.url', 'publicId': 'pub-1', 'createdAt': '2026-07-29T17:00:00Z'}
+          {
+            'id': 'img-1',
+            'url': 'http://image.url',
+            'publicId': 'pub-1',
+            'createdAt': '2026-07-29T17:00:00Z',
+          },
         ],
         'amenities': [
-          {'id': 'am-1', 'name': 'Parking', 'iconUrl': 'parking_icon'}
+          {'id': 'am-1', 'name': 'Parking', 'iconUrl': 'parking_icon'},
         ],
         'courts': [
           {
@@ -53,10 +58,10 @@ void main() {
             'pricePerHour': 1200.0,
             'isActive': true,
             'sports': [
-              {'id': 'sport-1', 'name': 'Football', 'iconUrl': 'soccer_icon'}
-            ]
-          }
-        ]
+              {'id': 'sport-1', 'name': 'Football', 'iconUrl': 'soccer_icon'},
+            ],
+          },
+        ],
       };
 
       final turf = Turf.fromJson(json);
@@ -66,7 +71,7 @@ void main() {
       expect(turf.name, 'Arena Football Club');
       expect(turf.basePricePerHour, 1500.0);
       expect(turf.city?.name, 'Bangalore');
-      
+
       expect(turf.images.length, 1);
       expect(turf.images.first.url, 'http://image.url');
 

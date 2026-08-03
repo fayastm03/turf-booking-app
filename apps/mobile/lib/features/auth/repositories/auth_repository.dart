@@ -6,7 +6,7 @@ class AuthRepository {
 
   AuthRepository(this._apiClient);
 
-  Future<Map<String, dynamic>> login(String email, String password) async {
+  Future<Map<String, dynamic>> login(String email, String password, {String? accountType}) async {
     try {
       final response = await _apiClient.dio.post('/auth/login', data: {
         'email': email,
@@ -21,13 +21,22 @@ class AuthRepository {
     }
   }
 
-  Future<void> register(String email, String password, String name, {String? phone}) async {
+  Future<void> register(
+    String email,
+    String password,
+    String name, {
+    String? phone,
+    String? accountType,
+    String? businessName,
+  }) async {
     try {
       final response = await _apiClient.dio.post('/auth/register', data: {
         'email': email,
         'password': password,
         'name': name,
-        if (phone != null) 'phone': phone,
+        'phone': phone,
+        if (accountType != null) 'accountType': accountType,
+        if (businessName != null) 'businessName': businessName,
       });
       
       final data = response.data;

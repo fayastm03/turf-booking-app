@@ -41,12 +41,19 @@ class WalletLoaded extends WalletState {
       wallet: wallet ?? this.wallet,
       isActionInProgress: isActionInProgress ?? this.isActionInProgress,
       actionError: clearStatus ? null : (actionError ?? this.actionError),
-      actionSuccessMsg: clearStatus ? null : (actionSuccessMsg ?? this.actionSuccessMsg),
+      actionSuccessMsg: clearStatus
+          ? null
+          : (actionSuccessMsg ?? this.actionSuccessMsg),
     );
   }
 
   @override
-  List<Object?> get props => [wallet, isActionInProgress, actionError, actionSuccessMsg];
+  List<Object?> get props => [
+    wallet,
+    isActionInProgress,
+    actionError,
+    actionSuccessMsg,
+  ];
 }
 
 class WalletFailure extends WalletState {
@@ -103,7 +110,10 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
     on<ClearWalletStatus>(_onClearWalletStatus);
   }
 
-  Future<void> _onLoadWallet(LoadWallet event, Emitter<WalletState> emit) async {
+  Future<void> _onLoadWallet(
+    LoadWallet event,
+    Emitter<WalletState> emit,
+  ) async {
     emit(WalletLoading());
     try {
       final wallet = await _walletRepository.getWallet();
@@ -113,51 +123,69 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
     }
   }
 
-  Future<void> _onTopupWallet(TopupWalletRequested event, Emitter<WalletState> emit) async {
+  Future<void> _onTopupWallet(
+    TopupWalletRequested event,
+    Emitter<WalletState> emit,
+  ) async {
     final currentState = state;
     if (currentState is WalletLoaded) {
       emit(currentState.copyWith(isActionInProgress: true, clearStatus: true));
       try {
         final updatedWallet = await _walletRepository.topupWallet(event.amount);
-        emit(currentState.copyWith(
-          wallet: updatedWallet,
-          isActionInProgress: false,
-          actionSuccessMsg: 'Successfully topped-up ₹${event.amount.toInt()} into Turf Wallet!',
-        ));
+        emit(
+          currentState.copyWith(
+            wallet: updatedWallet,
+            isActionInProgress: false,
+            actionSuccessMsg:
+                'Successfully topped-up ₹${event.amount.toInt()} into Turf Wallet!',
+          ),
+        );
       } catch (e) {
-        emit(currentState.copyWith(
-          isActionInProgress: false,
-          actionError: e.toString().replaceAll('Exception: ', ''),
-        ));
+        emit(
+          currentState.copyWith(
+            isActionInProgress: false,
+            actionError: e.toString().replaceAll('Exception: ', ''),
+          ),
+        );
       }
     }
   }
 
-  Future<void> _onPayBooking(PayBookingWithWalletRequested event, Emitter<WalletState> emit) async {
+  Future<void> _onPayBooking(
+    PayBookingWithWalletRequested event,
+    Emitter<WalletState> emit,
+  ) async {
     final currentState = state;
     if (currentState is WalletLoaded) {
       emit(currentState.copyWith(isActionInProgress: true, clearStatus: true));
       try {
         await _walletRepository.payFromWallet(event.bookingId);
-        
+
         // Re-load wallet state balance
         final updatedWallet = await _walletRepository.getWallet();
 
-        emit(currentState.copyWith(
-          wallet: updatedWallet,
-          isActionInProgress: false,
-          actionSuccessMsg: 'PAYMENT_SUCCESS',
-        ));
+        emit(
+          currentState.copyWith(
+            wallet: updatedWallet,
+            isActionInProgress: false,
+            actionSuccessMsg: 'PAYMENT_SUCCESS',
+          ),
+        );
       } catch (e) {
-        emit(currentState.copyWith(
-          isActionInProgress: false,
-          actionError: e.toString().replaceAll('Exception: ', ''),
-        ));
+        emit(
+          currentState.copyWith(
+            isActionInProgress: false,
+            actionError: e.toString().replaceAll('Exception: ', ''),
+          ),
+        );
       }
     }
   }
 
-  void _onClearWalletStatus(ClearWalletStatus event, Emitter<WalletState> emit) {
+  void _onClearWalletStatus(
+    ClearWalletStatus event,
+    Emitter<WalletState> emit,
+  ) {
     final currentState = state;
     if (currentState is WalletLoaded) {
       emit(currentState.copyWith(clearStatus: true));

@@ -66,13 +66,17 @@ class MarkAllNotificationsAsRead extends NotificationEvent {}
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final NotificationRepository _notificationRepository;
 
-  NotificationBloc(this._notificationRepository) : super(NotificationInitial()) {
+  NotificationBloc(this._notificationRepository)
+    : super(NotificationInitial()) {
     on<LoadNotifications>(_onLoadNotifications);
     on<MarkNotificationAsRead>(_onMarkAsRead);
     on<MarkAllNotificationsAsRead>(_onMarkAllAsRead);
   }
 
-  Future<void> _onLoadNotifications(LoadNotifications event, Emitter<NotificationState> emit) async {
+  Future<void> _onLoadNotifications(
+    LoadNotifications event,
+    Emitter<NotificationState> emit,
+  ) async {
     emit(NotificationLoading());
     try {
       final list = await _notificationRepository.getNotifications();
@@ -82,7 +86,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     }
   }
 
-  Future<void> _onMarkAsRead(MarkNotificationAsRead event, Emitter<NotificationState> emit) async {
+  Future<void> _onMarkAsRead(
+    MarkNotificationAsRead event,
+    Emitter<NotificationState> emit,
+  ) async {
     final currentState = state;
     if (currentState is NotificationLoaded) {
       try {
@@ -98,7 +105,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     }
   }
 
-  Future<void> _onMarkAllAsRead(MarkAllNotificationsAsRead event, Emitter<NotificationState> emit) async {
+  Future<void> _onMarkAllAsRead(
+    MarkAllNotificationsAsRead event,
+    Emitter<NotificationState> emit,
+  ) async {
     final currentState = state;
     if (currentState is NotificationLoaded) {
       try {

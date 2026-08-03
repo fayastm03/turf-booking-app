@@ -8,23 +8,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:mobile/main.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/core/network/api_client.dart';
+import 'package:mobile/features/auth/bloc/auth_bloc.dart';
+import 'package:mobile/features/auth/presentation/login_screen.dart';
+import 'package:mobile/features/auth/repositories/auth_repository.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('login lets a person choose the approved owner path', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: BlocProvider(
+          create: (_) => AuthBloc(AuthRepository(ApiClient())),
+          child: const LoginScreen(),
+        ),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    expect(find.text('Player Login'), findsOneWidget);
+    await tester.tap(find.text('Turf owner'));
     await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Owner Login'), findsOneWidget);
   });
 }

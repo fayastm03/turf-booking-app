@@ -25,27 +25,39 @@ export async function generateTokens(userId: string, email: string, roles: Syste
   return { accessToken, refreshToken };
 }
 
-export async function register(email: string, password: string, name: string, phone?: string) {
+export async function register(
+  email: string,
+  password: string,
+  name: string,
+  phone?: string,
+  accountType: 'USER' | 'OWNER' = 'USER',
+  businessName?: string,
+) {
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
     throw new Error('User already exists');
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
-  const user = await prisma.user.create({
-    data: {
-      email,
-      passwordHash,
-      name,
-      phone,
-      roles: [SystemRole.USER],
-    },
+  const user = await prisma.$transaction(async (tx) => {
+    const created = await tx.user.create({
+      data: { email, passwordHash, name, phone, roles: [SystemRole.USER] },
+    });
+
+    // Owner accounts remain ordinary users until an administrator approves
+    // their application. This prevents self-assigned owner permissions.
+    if (accountType === 'OWNER') {
+      await tx.ownerApplication.create({
+        data: { userId: created.id, businessName: businessName! },
+      });
+    }
+    return created;
   });
 
   return generateTokens(user.id, user.email, user.roles);
 }
 
-export async function login(email: string, password: string) {
+export async function login(email: string, password: string, accountType: 'USER' | 'OWNER' = 'USER') {
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
     throw new Error('Invalid email or password');
@@ -58,6 +70,14 @@ export async function login(email: string, password: string) {
 
   if (user.status === 'SUSPENDED') {
     throw new Error('User account is suspended');
+  }
+
+  if (accountType === 'OWNER' && !user.roles.includes(SystemRole.OWNER)) {
+    const application = await prisma.ownerApplication.findUnique({ where: { userId: user.id } });
+    if (application?.status === ApplicationStatus.PENDING) {
+      throw new Error('Your owner account is awaiting approval');
+    }
+    throw new Error('This email is not an approved turf-owner account');
   }
 
   const tokens = await generateTokens(user.id, user.email, user.roles);

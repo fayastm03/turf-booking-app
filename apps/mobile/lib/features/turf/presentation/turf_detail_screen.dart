@@ -39,12 +39,18 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
           if (state is TurfDetailLoaded) {
             if (state.reviewSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Review submitted successfully!'), backgroundColor: Colors.green),
+                const SnackBar(
+                  content: Text('Review submitted successfully!'),
+                  backgroundColor: Colors.green,
+                ),
               );
               context.read<TurfDetailBloc>().add(ClearReviewStatus());
             } else if (state.reviewError != null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.reviewError!), backgroundColor: theme.colorScheme.error),
+                SnackBar(
+                  content: Text(state.reviewError!),
+                  backgroundColor: theme.colorScheme.error,
+                ),
               );
               context.read<TurfDetailBloc>().add(ClearReviewStatus());
             }
@@ -60,7 +66,7 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
             final images = turf.images.isNotEmpty
                 ? turf.images.map((img) => img.url).toList()
                 : [
-                    'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=600&auto=format&fit=crop&q=80'
+                    'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=600&auto=format&fit=crop&q=80',
                   ];
 
             return Stack(
@@ -86,12 +92,19 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                             // Address
                             Row(
                               children: [
-                                Icon(Icons.location_on, color: primaryColor, size: 18),
+                                Icon(
+                                  Icons.location_on,
+                                  color: primaryColor,
+                                  size: 18,
+                                ),
                                 const SizedBox(width: 6),
                                 Expanded(
                                   child: Text(
                                     turf.address,
-                                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -116,7 +129,11 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              _buildCourtsList(context, turf.courts, state.selectedCourt),
+                              _buildCourtsList(
+                                context,
+                                turf.courts,
+                                state.selectedCourt,
+                              ),
                               const SizedBox(height: 24),
                             ],
 
@@ -124,7 +141,9 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                             Text(
                               'Select Date',
                               style: theme.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold, color: Colors.white),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                             const SizedBox(height: 12),
                             _buildDatePickerList(context, state.selectedDate),
@@ -137,23 +156,34 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                                 Text(
                                   'Available Slots',
                                   style: theme.textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold, color: Colors.white),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                                 ),
                                 if (state.isLoadingSlots)
                                   const SizedBox(
                                     width: 16,
                                     height: 16,
-                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
                                   ),
                               ],
                             ),
                             const SizedBox(height: 12),
-                            _buildSlotsGrid(context, state.courtSlots, state.selectedSlot, theme),
+                            _buildSlotsGrid(
+                              context,
+                              state.courtSlots,
+                              state.selectedSlot,
+                              theme,
+                            ),
                             const SizedBox(height: 24),
 
                             // 8. Reviews section
                             _buildReviewsSection(context, state, theme),
-                            const SizedBox(height: 120), // spacer for bottom CTA sheet
+                            const SizedBox(
+                              height: 120,
+                            ), // spacer for bottom CTA sheet
                           ],
                         ),
                       ),
@@ -167,7 +197,7 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                   left: 16,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
@@ -181,7 +211,7 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                   right: 16,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
@@ -197,7 +227,12 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    child: _buildStickyCta(context, state.selectedSlot!, turf, theme),
+                    child: _buildStickyCta(
+                      context,
+                      state.selectedSlot!,
+                      turf,
+                      theme,
+                    ),
                   ),
               ],
             );
@@ -248,7 +283,9 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                   margin: const EdgeInsets.symmetric(horizontal: 3.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3),
-                    color: isSelected ? Theme.of(context).colorScheme.primary : Colors.white54,
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primary
+                        : Colors.white54,
                   ),
                 );
               }).toList(),
@@ -275,7 +312,7 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
         const SizedBox(width: 8),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.06),
+            color: Colors.white.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(8),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -285,7 +322,11 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
               SizedBox(width: 4),
               Text(
                 '4.8',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
               ),
             ],
           ),
@@ -301,7 +342,9 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
         Text(
           description,
           maxLines: _isDescriptionExpanded ? null : 3,
-          overflow: _isDescriptionExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+          overflow: _isDescriptionExpanded
+              ? TextOverflow.visible
+              : TextOverflow.ellipsis,
           style: const TextStyle(color: Colors.white70, height: 1.4),
         ),
         const SizedBox(height: 4),
@@ -333,7 +376,9 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
         Text(
           'Amenities Offered',
           style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold, color: Colors.white),
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -362,7 +407,10 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                     const SizedBox(height: 6),
                     Text(
                       amenity.name,
-                      style: const TextStyle(color: Colors.white70, fontSize: 11),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 11,
+                      ),
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -377,7 +425,11 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
     );
   }
 
-  Widget _buildCourtsList(BuildContext context, List<Court> courts, Court? selected) {
+  Widget _buildCourtsList(
+    BuildContext context,
+    List<Court> courts,
+    Court? selected,
+  ) {
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
 
@@ -403,7 +455,9 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
-                side: BorderSide(color: isSelected ? primaryColor : Colors.white10),
+                side: BorderSide(
+                  color: isSelected ? primaryColor : Colors.white10,
+                ),
               ),
               onSelected: (_) {
                 context.read<TurfDetailBloc>().add(ChangeSelectedCourt(court));
@@ -476,7 +530,12 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
     );
   }
 
-  Widget _buildSlotsGrid(BuildContext context, List<Slot> slots, Slot? selected, ThemeData theme) {
+  Widget _buildSlotsGrid(
+    BuildContext context,
+    List<Slot> slots,
+    Slot? selected,
+    ThemeData theme,
+  ) {
     if (slots.isEmpty) {
       return const Padding(
         padding: EdgeInsets.symmetric(vertical: 24.0),
@@ -511,19 +570,19 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
         Color textColor = Colors.white;
 
         if (!isAvailable) {
-          bgColor = Colors.white.withOpacity(0.02);
+          bgColor = Colors.white.withValues(alpha: 0.02);
           textColor = Colors.white24;
         } else if (isSelected) {
           borderColor = primaryColor;
-          bgColor = primaryColor.withOpacity(0.1);
+          bgColor = primaryColor.withValues(alpha: 0.1);
         }
 
         return GestureDetector(
           onTap: isAvailable
               ? () {
                   context.read<TurfDetailBloc>().add(
-                        SelectBookingSlot(isSelected ? null : slot),
-                      );
+                    SelectBookingSlot(isSelected ? null : slot),
+                  );
                 }
               : null,
           child: Container(
@@ -560,7 +619,11 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
     );
   }
 
-  Widget _buildReviewsSection(BuildContext context, TurfDetailLoaded state, ThemeData theme) {
+  Widget _buildReviewsSection(
+    BuildContext context,
+    TurfDetailLoaded state,
+    ThemeData theme,
+  ) {
     final primaryColor = theme.colorScheme.primary;
 
     return Column(
@@ -572,7 +635,9 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
             Text(
               'Customer Reviews (${state.reviews.length})',
               style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold, color: Colors.white),
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             GestureDetector(
               onTap: () {
@@ -584,7 +649,11 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                   const SizedBox(width: 4),
                   Text(
                     'Write Review',
-                    style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold, fontSize: 13),
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
                   ),
                 ],
               ),
@@ -609,7 +678,9 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
               final review = state.reviews[index];
               final date = DateTime.parse(review['createdAt']);
               final formattedDate = DateFormat('MMM d, yyyy').format(date);
-              final userName = review['user'] != null ? review['user']['name'] : 'Guest';
+              final userName = review['user'] != null
+                  ? review['user']['name']
+                  : 'Guest';
 
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
@@ -627,11 +698,18 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                       children: [
                         Text(
                           userName,
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
                         ),
                         Text(
                           formattedDate,
-                          style: const TextStyle(color: Colors.white38, fontSize: 11),
+                          style: const TextStyle(
+                            color: Colors.white38,
+                            fontSize: 11,
+                          ),
                         ),
                       ],
                     ),
@@ -640,17 +718,24 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                     Row(
                       children: List.generate(5, (starIdx) {
                         return Icon(
-                          starIdx < (review['rating'] as int) ? Icons.star : Icons.star_border,
+                          starIdx < (review['rating'] as int)
+                              ? Icons.star
+                              : Icons.star_border,
                           color: Colors.amber,
                           size: 14,
                         );
                       }),
                     ),
-                    if (review['comment'] != null && (review['comment'] as String).isNotEmpty) ...[
+                    if (review['comment'] != null &&
+                        (review['comment'] as String).isNotEmpty) ...[
                       const SizedBox(height: 8),
                       Text(
                         review['comment'],
-                        style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.3),
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
+                          height: 1.3,
+                        ),
                       ),
                     ],
                   ],
@@ -695,7 +780,11 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                     children: [
                       const Text(
                         'Submit Review',
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.close, color: Colors.white70),
@@ -740,7 +829,7 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.04),
+                      color: Colors.white.withValues(alpha: 0.04),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.white10),
                     ),
@@ -765,18 +854,23 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                       onPressed: () {
                         Navigator.pop(sheetContext);
                         context.read<TurfDetailBloc>().add(
-                              SubmitReviewRequested(
-                                rating: localRating,
-                                comment: commentController.text,
-                              ),
-                            );
+                          SubmitReviewRequested(
+                            rating: localRating,
+                            comment: commentController.text,
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
                         foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                      child: const Text('Submit Review', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: const Text(
+                        'Submit Review',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ],
@@ -788,14 +882,25 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
     );
   }
 
-  Widget _buildStickyCta(BuildContext context, Slot slot, Turf turf, ThemeData theme) {
+  Widget _buildStickyCta(
+    BuildContext context,
+    Slot slot,
+    Turf turf,
+    ThemeData theme,
+  ) {
     final primaryColor = theme.colorScheme.primary;
 
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF151D30),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 10, offset: Offset(0, -2))],
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black45,
+            blurRadius: 10,
+            offset: Offset(0, -2),
+          ),
+        ],
         border: Border.all(color: Colors.white10, width: 0.5),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -808,27 +913,39 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
             children: [
               const Text(
                 'Selected Time Slot',
-                style: TextStyle(color: Colors.white38, fontSize: 11, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white38,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 '${slot.startTime} - ${slot.endTime}',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
               ),
               const SizedBox(height: 2),
               Text(
                 'Total Price: ₹${slot.price.toInt()}',
-                style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold, fontSize: 13),
+                style: TextStyle(
+                  color: primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
               ),
             ],
           ),
           const SizedBox(width: 16),
           ElevatedButton(
             onPressed: () {
-              context.push('/booking/${slot.id}', extra: {
-                'turf': turf,
-                'slot': slot,
-              });
+              context.push(
+                '/booking/${slot.id}',
+                extra: {'turf': turf, 'slot': slot},
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryColor,

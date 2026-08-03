@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import '../bloc/booking_bloc.dart';
 
 class MyBookingsScreen extends StatefulWidget {
@@ -42,7 +41,10 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         listener: (context, state) {
           if (state is CancellationSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Reservation cancelled successfully'), backgroundColor: Colors.green),
+              const SnackBar(
+                content: Text('Reservation cancelled successfully'),
+                backgroundColor: Colors.green,
+              ),
             );
             // Refresh list
             context.read<BookingBloc>().add(LoadMyBookingsRequested());
@@ -50,12 +52,16 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
 
           if (state is CancellationFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error), backgroundColor: theme.colorScheme.error),
+              SnackBar(
+                content: Text(state.error),
+                backgroundColor: theme.colorScheme.error,
+              ),
             );
           }
         },
         builder: (context, state) {
-          if (state is MyBookingsLoadInProgress || state is CancellationLoading) {
+          if (state is MyBookingsLoadInProgress ||
+              state is CancellationLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -64,10 +70,15 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Failed to load bookings: ${state.error}', style: const TextStyle(color: Colors.white70)),
+                  Text(
+                    'Failed to load bookings: ${state.error}',
+                    style: const TextStyle(color: Colors.white70),
+                  ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => context.read<BookingBloc>().add(LoadMyBookingsRequested()),
+                    onPressed: () => context.read<BookingBloc>().add(
+                      LoadMyBookingsRequested(),
+                    ),
                     child: const Text('Retry'),
                   ),
                 ],
@@ -127,7 +138,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18),
-                side: BorderSide(color: isSelected ? primaryColor : Colors.white10),
+                side: BorderSide(
+                  color: isSelected ? primaryColor : Colors.white10,
+                ),
               ),
               onSelected: (_) {
                 setState(() {
@@ -141,13 +154,21 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     );
   }
 
-  Widget _buildBookingsList(BuildContext context, List<dynamic> bookings, ThemeData theme) {
+  Widget _buildBookingsList(
+    BuildContext context,
+    List<dynamic> bookings,
+    ThemeData theme,
+  ) {
     if (bookings.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.calendar_today_outlined, size: 64, color: Colors.white38),
+            const Icon(
+              Icons.calendar_today_outlined,
+              size: 64,
+              color: Colors.white38,
+            ),
             const SizedBox(height: 16),
             Text(
               'No $_activeFilter reservations found',
@@ -175,9 +196,11 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         final turf = court['turf'];
         final status = booking['status'] as String;
 
-        final isUpcoming = _isUpcomingBooking(slot['date'], slot['startTime']) &&
+        final isUpcoming =
+            _isUpcomingBooking(slot['date'], slot['startTime']) &&
             status.toUpperCase() == 'CONFIRMED';
-        final isCancelled = status.toUpperCase() == 'CANCELLED' ||
+        final isCancelled =
+            status.toUpperCase() == 'CANCELLED' ||
             status.toUpperCase() == 'REFUNDED' ||
             status.toUpperCase() == 'EXPIRED';
 
@@ -192,7 +215,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
 
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
-          color: isCancelled ? const Color(0xFF131A26).withOpacity(0.4) : const Color(0xFF151D30),
+          color: isCancelled
+              ? const Color(0xFF131A26).withValues(alpha: 0.4)
+              : const Color(0xFF151D30),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -203,13 +228,20 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: badgeColor.withOpacity(0.15),
+                        color: badgeColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       child: Text(
                         status,
-                        style: TextStyle(color: badgeColor, fontSize: 11, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: badgeColor,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     Text(
@@ -233,23 +265,40 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                 const SizedBox(height: 4),
                 Text(
                   '${court['name']} • ${court['type']}',
-                  style: TextStyle(color: isCancelled ? Colors.white24 : Colors.white60, fontSize: 13),
+                  style: TextStyle(
+                    color: isCancelled ? Colors.white24 : Colors.white60,
+                    fontSize: 13,
+                  ),
                 ),
                 const Divider(height: 24, color: Colors.white10),
                 Row(
                   children: [
-                    Icon(Icons.calendar_today, size: 16, color: isCancelled ? Colors.white24 : Colors.white60),
+                    Icon(
+                      Icons.calendar_today,
+                      size: 16,
+                      color: isCancelled ? Colors.white24 : Colors.white60,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       slot['date'],
-                      style: TextStyle(color: isCancelled ? Colors.white24 : Colors.white70, fontSize: 13),
+                      style: TextStyle(
+                        color: isCancelled ? Colors.white24 : Colors.white70,
+                        fontSize: 13,
+                      ),
                     ),
                     const SizedBox(width: 16),
-                    Icon(Icons.access_time, size: 16, color: isCancelled ? Colors.white24 : Colors.white60),
+                    Icon(
+                      Icons.access_time,
+                      size: 16,
+                      color: isCancelled ? Colors.white24 : Colors.white60,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       '${slot['startTime']} - ${slot['endTime']}',
-                      style: TextStyle(color: isCancelled ? Colors.white24 : Colors.white70, fontSize: 13),
+                      style: TextStyle(
+                        color: isCancelled ? Colors.white24 : Colors.white70,
+                        fontSize: 13,
+                      ),
                     ),
                   ],
                 ),
@@ -261,20 +310,29 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                     children: [
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: () => _confirmCancel(context, booking['id']),
+                          onPressed: () =>
+                              _confirmCancel(context, booking['id']),
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Colors.redAccent),
                             foregroundColor: Colors.redAccent,
                             padding: const EdgeInsets.symmetric(vertical: 10),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                          child: const Text('Cancel Ticket', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                          child: const Text(
+                            'Cancel Ticket',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.06),
+                          color: Colors.white.withValues(alpha: 0.06),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: IconButton(
@@ -300,12 +358,15 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       final slot = b['slot'];
       final status = b['status'] as String;
 
-      final isUpcoming = _isUpcomingBooking(slot['date'], slot['startTime']) &&
+      final isUpcoming =
+          _isUpcomingBooking(slot['date'], slot['startTime']) &&
           status.toUpperCase() == 'CONFIRMED';
-      final isCancelled = status.toUpperCase() == 'CANCELLED' ||
+      final isCancelled =
+          status.toUpperCase() == 'CANCELLED' ||
           status.toUpperCase() == 'REFUNDED' ||
           status.toUpperCase() == 'EXPIRED';
-      final isCompleted = !isUpcoming && !isCancelled && status.toUpperCase() == 'CONFIRMED';
+      final isCompleted =
+          !isUpcoming && !isCancelled && status.toUpperCase() == 'CONFIRMED';
 
       if (_activeFilter == 'Upcoming') return isUpcoming;
       if (_activeFilter == 'Cancelled') return isCancelled;
@@ -328,7 +389,10 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF151D30),
-        title: const Text('Cancel Booking?', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Cancel Booking?',
+          style: TextStyle(color: Colors.white),
+        ),
         content: const Text(
           'Are you sure you want to cancel this booking? A refund will be initiated to your original payment method automatically.',
           style: TextStyle(color: Colors.white70),
@@ -341,10 +405,18 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              context.read<BookingBloc>().add(CancelBookingRequested(bookingId));
+              context.read<BookingBloc>().add(
+                CancelBookingRequested(bookingId),
+              );
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, foregroundColor: Colors.white),
-            child: const Text('Yes, Cancel', style: TextStyle(fontWeight: FontWeight.bold)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text(
+              'Yes, Cancel',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -355,7 +427,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: const Color(0xFF151D30),
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(24),
@@ -364,7 +438,11 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
             children: [
               const Text(
                 'Show Check-in QR Code',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -382,14 +460,16 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                 padding: const EdgeInsets.all(16),
                 width: 180,
                 height: 180,
-                child: CustomPaint(
-                  painter: _QrSimulationPainter(),
-                ),
+                child: CustomPaint(painter: _QrSimulationPainter()),
               ),
               const SizedBox(height: 16),
               Text(
                 'Ticket ID: ${booking['id'].toString().substring(0, 8).toUpperCase()}',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
               const SizedBox(height: 12),
             ],
@@ -425,7 +505,11 @@ class _QrSimulationPainter extends CustomPainter {
 
     canvas.drawLine(const Offset(10, 80), const Offset(80, 80), randomPaint);
     canvas.drawLine(const Offset(40, 100), const Offset(40, 140), randomPaint);
-    canvas.drawLine(const Offset(100, 100), const Offset(140, 100), randomPaint);
+    canvas.drawLine(
+      const Offset(100, 100),
+      const Offset(140, 100),
+      randomPaint,
+    );
     canvas.drawLine(const Offset(120, 80), const Offset(120, 150), randomPaint);
     canvas.drawLine(const Offset(60, 120), const Offset(120, 120), randomPaint);
   }
@@ -434,9 +518,15 @@ class _QrSimulationPainter extends CustomPainter {
     // Outer boundary
     canvas.drawRect(Rect.fromLTWH(x, y, s, s), Paint()..color = Colors.black);
     // Inner spacing
-    canvas.drawRect(Rect.fromLTWH(x + 5, y + 5, s - 10, s - 10), Paint()..color = Colors.white);
+    canvas.drawRect(
+      Rect.fromLTWH(x + 5, y + 5, s - 10, s - 10),
+      Paint()..color = Colors.white,
+    );
     // Center block
-    canvas.drawRect(Rect.fromLTWH(x + 10, y + 10, s - 20, s - 20), Paint()..color = Colors.black);
+    canvas.drawRect(
+      Rect.fromLTWH(x + 10, y + 10, s - 20, s - 20),
+      Paint()..color = Colors.black,
+    );
   }
 
   @override

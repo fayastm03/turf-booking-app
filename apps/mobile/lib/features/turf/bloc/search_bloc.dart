@@ -53,23 +53,29 @@ class SearchLoaded extends SearchState {
       results: results ?? this.results,
       recentSearches: recentSearches ?? this.recentSearches,
       query: query ?? this.query,
-      selectedCityId: clearCity ? null : (selectedCityId ?? this.selectedCityId),
-      selectedSportId: clearSport ? null : (selectedSportId ?? this.selectedSportId),
-      selectedCourtType: clearType ? null : (selectedCourtType ?? this.selectedCourtType),
+      selectedCityId: clearCity
+          ? null
+          : (selectedCityId ?? this.selectedCityId),
+      selectedSportId: clearSport
+          ? null
+          : (selectedSportId ?? this.selectedSportId),
+      selectedCourtType: clearType
+          ? null
+          : (selectedCourtType ?? this.selectedCourtType),
       sortBy: sortBy ?? this.sortBy,
     );
   }
 
   @override
   List<Object?> get props => [
-        results,
-        recentSearches,
-        query,
-        selectedCityId,
-        selectedSportId,
-        selectedCourtType,
-        sortBy,
-      ];
+    results,
+    recentSearches,
+    query,
+    selectedCityId,
+    selectedSportId,
+    selectedCourtType,
+    sortBy,
+  ];
 }
 
 class SearchFailure extends SearchState {
@@ -126,7 +132,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final LocalStorage _localStorage;
   static const String _recentSearchesKey = 'recent_searches';
 
-  SearchBloc(this._turfRepository, this._localStorage) : super(SearchInitial()) {
+  SearchBloc(this._turfRepository, this._localStorage)
+    : super(SearchInitial()) {
     on<LoadSearchInit>(_onLoadSearchInit);
     on<SearchQuerySubmitted>(_onSearchQuerySubmitted);
     on<UpdateFilters>(_onUpdateFilters);
@@ -134,7 +141,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<ClearRecentSearchesRequested>(_onClearRecentSearches);
   }
 
-  Future<void> _onLoadSearchInit(LoadSearchInit event, Emitter<SearchState> emit) async {
+  Future<void> _onLoadSearchInit(
+    LoadSearchInit event,
+    Emitter<SearchState> emit,
+  ) async {
     emit(SearchLoading());
     try {
       final recent = _getRecentSearches();
@@ -145,7 +155,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
   }
 
-  Future<void> _onSearchQuerySubmitted(SearchQuerySubmitted event, Emitter<SearchState> emit) async {
+  Future<void> _onSearchQuerySubmitted(
+    SearchQuerySubmitted event,
+    Emitter<SearchState> emit,
+  ) async {
     final currentState = state;
     if (currentState is SearchLoaded) {
       emit(SearchLoading());
@@ -169,32 +182,47 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         var filteredTurfs = turfs;
         if (currentState.selectedCourtType != null) {
           filteredTurfs = turfs.where((turf) {
-            return turf.courts.any((court) => court.type.toLowerCase() == currentState.selectedCourtType!.toLowerCase());
+            return turf.courts.any(
+              (court) =>
+                  court.type.toLowerCase() ==
+                  currentState.selectedCourtType!.toLowerCase(),
+            );
           }).toList();
         }
 
         // Apply local sorting
         _sortTurfs(filteredTurfs, currentState.sortBy);
 
-        emit(currentState.copyWith(
-          results: filteredTurfs,
-          recentSearches: recent,
-          query: query,
-        ));
+        emit(
+          currentState.copyWith(
+            results: filteredTurfs,
+            recentSearches: recent,
+            query: query,
+          ),
+        );
       } catch (e) {
         emit(SearchFailure(e.toString().replaceAll('Exception: ', '')));
       }
     }
   }
 
-  Future<void> _onUpdateFilters(UpdateFilters event, Emitter<SearchState> emit) async {
+  Future<void> _onUpdateFilters(
+    UpdateFilters event,
+    Emitter<SearchState> emit,
+  ) async {
     final currentState = state;
     if (currentState is SearchLoaded) {
       emit(SearchLoading());
       try {
-        final cityId = event.cityId == 'all' ? null : (event.cityId ?? currentState.selectedCityId);
-        final sportId = event.sportId == 'all' ? null : (event.sportId ?? currentState.selectedSportId);
-        final courtType = event.courtType == 'all' ? null : (event.courtType ?? currentState.selectedCourtType);
+        final cityId = event.cityId == 'all'
+            ? null
+            : (event.cityId ?? currentState.selectedCityId);
+        final sportId = event.sportId == 'all'
+            ? null
+            : (event.sportId ?? currentState.selectedSportId);
+        final courtType = event.courtType == 'all'
+            ? null
+            : (event.courtType ?? currentState.selectedCourtType);
         final sortBy = event.sortBy ?? currentState.sortBy;
 
         final turfs = await _turfRepository.getTurfs(
@@ -206,29 +234,36 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         var filteredTurfs = turfs;
         if (courtType != null) {
           filteredTurfs = turfs.where((turf) {
-            return turf.courts.any((court) => court.type.toLowerCase() == courtType.toLowerCase());
+            return turf.courts.any(
+              (court) => court.type.toLowerCase() == courtType.toLowerCase(),
+            );
           }).toList();
         }
 
         _sortTurfs(filteredTurfs, sortBy);
 
-        emit(currentState.copyWith(
-          results: filteredTurfs,
-          selectedCityId: cityId,
-          selectedSportId: sportId,
-          selectedCourtType: courtType,
-          sortBy: sortBy,
-          clearCity: event.cityId == 'all',
-          clearSport: event.sportId == 'all',
-          clearType: event.courtType == 'all',
-        ));
+        emit(
+          currentState.copyWith(
+            results: filteredTurfs,
+            selectedCityId: cityId,
+            selectedSportId: sportId,
+            selectedCourtType: courtType,
+            sortBy: sortBy,
+            clearCity: event.cityId == 'all',
+            clearSport: event.sportId == 'all',
+            clearType: event.courtType == 'all',
+          ),
+        );
       } catch (e) {
         emit(SearchFailure(e.toString().replaceAll('Exception: ', '')));
       }
     }
   }
 
-  Future<void> _onClearAllFilters(ClearAllFilters event, Emitter<SearchState> emit) async {
+  Future<void> _onClearAllFilters(
+    ClearAllFilters event,
+    Emitter<SearchState> emit,
+  ) async {
     final currentState = state;
     if (currentState is SearchLoaded) {
       emit(SearchLoading());
@@ -237,20 +272,25 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
           search: currentState.query.isEmpty ? null : currentState.query,
         );
 
-        emit(currentState.copyWith(
-          results: turfs,
-          clearCity: true,
-          clearSport: true,
-          clearType: true,
-          sortBy: 'name_asc',
-        ));
+        emit(
+          currentState.copyWith(
+            results: turfs,
+            clearCity: true,
+            clearSport: true,
+            clearType: true,
+            sortBy: 'name_asc',
+          ),
+        );
       } catch (e) {
         emit(SearchFailure(e.toString().replaceAll('Exception: ', '')));
       }
     }
   }
 
-  Future<void> _onClearRecentSearches(ClearRecentSearchesRequested event, Emitter<SearchState> emit) async {
+  Future<void> _onClearRecentSearches(
+    ClearRecentSearchesRequested event,
+    Emitter<SearchState> emit,
+  ) async {
     final currentState = state;
     if (currentState is SearchLoaded) {
       await _localStorage.deleteSetting(_recentSearchesKey);

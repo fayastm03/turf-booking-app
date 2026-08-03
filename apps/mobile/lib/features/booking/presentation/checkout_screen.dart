@@ -734,10 +734,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'Razorpay Payment Sheet',
                     style: TextStyle(
                       color: Colors.white,
@@ -785,8 +785,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(sheetContext);
-                        // Trigger Razorpay payment mock completion
-                        context.read<BookingBloc>().add(PaymentCompleted());
+                        context.read<BookingBloc>().add(
+                              PaymentCompleted(
+                                orderId: orderId,
+                                paymentId: 'pay_mock_${DateTime.now().millisecondsSinceEpoch}',
+                                signature: 'sig_mock_validation_checksum',
+                              ),
+                            );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,

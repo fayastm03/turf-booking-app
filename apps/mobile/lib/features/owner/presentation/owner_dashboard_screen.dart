@@ -53,7 +53,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               backgroundColor: primaryColor,
               foregroundColor: Colors.black,
               icon: const Icon(Icons.add, size: 20),
-              label: const Text('Add Facility', style: TextStyle(fontWeight: FontWeight.bold)),
+              label: const Text(
+                'Add Facility',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             )
           : null,
       body: BlocConsumer<OwnerBloc, OwnerState>(
@@ -61,14 +64,20 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
           if (state is OwnerLoaded) {
             if (state.actionSuccessMsg != null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.actionSuccessMsg!), backgroundColor: Colors.green),
+                SnackBar(
+                  content: Text(state.actionSuccessMsg!),
+                  backgroundColor: Colors.green,
+                ),
               );
               context.read<OwnerBloc>().add(ClearOwnerStatus());
             }
 
             if (state.actionError != null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.actionError!), backgroundColor: theme.colorScheme.error),
+                SnackBar(
+                  content: Text(state.actionError!),
+                  backgroundColor: theme.colorScheme.error,
+                ),
               );
               context.read<OwnerBloc>().add(ClearOwnerStatus());
             }
@@ -84,10 +93,14 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Failed to load dashboard: ${state.error}', style: const TextStyle(color: Colors.white70)),
+                  Text(
+                    'Failed to load dashboard: ${state.error}',
+                    style: const TextStyle(color: Colors.white70),
+                  ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => context.read<OwnerBloc>().add(LoadOwnerTurfs()),
+                    onPressed: () =>
+                        context.read<OwnerBloc>().add(LoadOwnerTurfs()),
                     child: const Text('Retry'),
                   ),
                 ],
@@ -107,8 +120,18 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: _activeTab == 0
-                        ? _buildFacilitiesTab(context, state.turfs, primaryColor, theme)
-                        : _buildAnalyticsTab(context, state.analytics, primaryColor, theme),
+                        ? _buildFacilitiesTab(
+                            context,
+                            state.turfs,
+                            primaryColor,
+                            theme,
+                          )
+                        : _buildAnalyticsTab(
+                            context,
+                            state.analytics,
+                            primaryColor,
+                            theme,
+                          ),
                   ),
                 ),
               ],
@@ -187,17 +210,30 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
     );
   }
 
-  Widget _buildFacilitiesTab(BuildContext context, List<dynamic> turfs, Color primaryColor, ThemeData theme) {
+  Widget _buildFacilitiesTab(
+    BuildContext context,
+    List<dynamic> turfs,
+    Color primaryColor,
+    ThemeData theme,
+  ) {
     if (turfs.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.business_outlined, size: 64, color: Colors.white38),
+            const Icon(
+              Icons.business_outlined,
+              size: 64,
+              color: Colors.white38,
+            ),
             const SizedBox(height: 16),
             const Text(
               'No facilities registered yet',
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 24),
             ElevatedButton(
@@ -221,8 +257,12 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
           final status = turf['status'] as String? ?? 'PENDING';
 
           Color badgeColor = Colors.orange;
-          if (status == 'APPROVED' || status == 'ACTIVE') badgeColor = Colors.green;
-          if (status == 'REJECTED') badgeColor = Colors.red;
+          if (status == 'APPROVED' || status == 'ACTIVE') {
+            badgeColor = Colors.green;
+          }
+          if (status == 'REJECTED') {
+            badgeColor = Colors.red;
+          }
 
           return Card(
             margin: const EdgeInsets.only(bottom: 16),
@@ -237,25 +277,38 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: badgeColor.withOpacity(0.15),
+                          color: badgeColor.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         child: Text(
                           status,
-                          style: TextStyle(color: badgeColor, fontSize: 11, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            color: badgeColor,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       Text(
                         '${courts.length} Pitches',
-                        style: const TextStyle(color: Colors.white60, fontSize: 13),
+                        style: const TextStyle(
+                          color: Colors.white60,
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 12),
                   Text(
                     turf['name'],
-                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -268,7 +321,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                     children: [
                       Text(
                         '₹${(turf['basePricePerHour'] as num).toInt()}/hr Base',
-                        style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Row(
                         children: [
@@ -276,7 +332,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                             onPressed: () {
                               _showGenerateSlotsSheet(context, turf);
                             },
-                            child: const Text('Generate Slots', style: TextStyle(fontSize: 12)),
+                            child: const Text(
+                              'Generate Slots',
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ),
                           const SizedBox(width: 8),
                           ElevatedButton(
@@ -287,7 +346,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                               backgroundColor: Colors.white10,
                               foregroundColor: Colors.white,
                             ),
-                            child: const Text('Courts', style: TextStyle(fontSize: 12)),
+                            child: const Text(
+                              'Courts',
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ),
                         ],
                       ),
@@ -302,7 +364,12 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
     );
   }
 
-  Widget _buildAnalyticsTab(BuildContext context, Map<String, dynamic>? analytics, Color primaryColor, ThemeData theme) {
+  Widget _buildAnalyticsTab(
+    BuildContext context,
+    Map<String, dynamic>? analytics,
+    Color primaryColor,
+    ThemeData theme,
+  ) {
     if (analytics == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -356,7 +423,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             // Graph Chart Section
             Text(
               'Monthly Performance Overview',
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(height: 12),
             Container(
@@ -377,13 +447,21 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             // Recent activity lists
             Text(
               'Recent Booking Logs',
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(height: 12),
             if (recentBookings.isEmpty)
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 24.0),
-                child: Center(child: Text('No bookings logged yet.', style: TextStyle(color: Colors.white38))),
+                child: Center(
+                  child: Text(
+                    'No bookings logged yet.',
+                    style: TextStyle(color: Colors.white38),
+                  ),
+                ),
               )
             else
               ListView.builder(
@@ -408,18 +486,28 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                           children: [
                             Text(
                               b['userName'],
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               '${b['courtName']} • ${b['date']}',
-                              style: const TextStyle(color: Colors.white38, fontSize: 11),
+                              style: const TextStyle(
+                                color: Colors.white38,
+                                fontSize: 11,
+                              ),
                             ),
                           ],
                         ),
                         Text(
                           '₹${(b['amount'] as num).toInt()}',
-                          style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -433,7 +521,12 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
     );
   }
 
-  Widget _buildKpiCard({required String title, required String value, required IconData icon, required Color color}) {
+  Widget _buildKpiCard({
+    required String title,
+    required String value,
+    required IconData icon,
+    required Color color,
+  }) {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF151D30),
@@ -449,7 +542,11 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             children: [
               Text(
                 title.toUpperCase(),
-                style: const TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white38,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Icon(icon, color: color, size: 18),
             ],
@@ -457,7 +554,11 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
           const SizedBox(height: 12),
           Text(
             value,
-             style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ],
       ),
@@ -465,14 +566,22 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   }
 
   void _showGenerateSlotsSheet(BuildContext context, dynamic turf) {
-    final startController = TextEditingController(text: DateFormat('yyyy-MM-dd').format(DateTime.now()));
-    final endController = TextEditingController(text: DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 7))));
+    final startController = TextEditingController(
+      text: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+    );
+    final endController = TextEditingController(
+      text: DateFormat(
+        'yyyy-MM-dd',
+      ).format(DateTime.now().add(const Duration(days: 7))),
+    );
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: const Color(0xFF151D30),
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (sheetContext) {
         return Padding(
           padding: EdgeInsets.only(
@@ -487,7 +596,11 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             children: [
               Text(
                 'Generate Slots: ${turf['name']}',
-                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -527,20 +640,25 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                     if (start.isNotEmpty && end.isNotEmpty) {
                       Navigator.pop(sheetContext);
                       context.read<OwnerBloc>().add(
-                            GenerateSlotsRequested(
-                              turfId: turf['id'],
-                              startDate: start,
-                              endDate: end,
-                            ),
-                          );
+                        GenerateSlotsRequested(
+                          turfId: turf['id'],
+                          startDate: start,
+                          endDate: end,
+                        ),
+                      );
                     }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                  child: const Text('Run Generation Engine', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    'Run Generation Engine',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ],
@@ -555,7 +673,9 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: const Color(0xFF151D30),
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (sheetContext) {
         return StatefulBuilder(
           builder: (sheetContext, setSheetState) {
@@ -581,11 +701,21 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                           children: [
                             Text(
                               turf['name'],
-                              style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const Text('Pitch / Courts list', style: TextStyle(color: Colors.white38, fontSize: 12)),
+                            const Text(
+                              'Pitch / Courts list',
+                              style: TextStyle(
+                                color: Colors.white38,
+                                fontSize: 12,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -596,9 +726,13 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                         icon: const Icon(Icons.add, size: 16),
                         label: const Text('Add Court'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
                           foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                     ],
@@ -624,7 +758,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                         return Container(
                           margin: const EdgeInsets.only(bottom: 12),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.04),
+                            color: Colors.white.withValues(alpha: 0.04),
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: Colors.white10),
                           ),
@@ -637,12 +771,19 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                                 children: [
                                   Text(
                                     court['name'],
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
                                     court['type'],
-                                    style: const TextStyle(color: Colors.white38, fontSize: 11),
+                                    style: const TextStyle(
+                                      color: Colors.white38,
+                                      fontSize: 11,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -650,11 +791,19 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                                 children: [
                                   Text(
                                     '₹${(court['pricePerHour'] as num).toInt()}/hr',
-                                    style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   const SizedBox(width: 8),
                                   IconButton(
-                                    icon: const Icon(Icons.schedule, color: Colors.white70),
+                                    icon: const Icon(
+                                      Icons.schedule,
+                                      color: Colors.white70,
+                                    ),
                                     onPressed: () {
                                       _showTemplatesManager(context, court);
                                     },
@@ -685,7 +834,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: const Color(0xFF151D30),
-        title: const Text('Add Court / Pitch', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Add Court / Pitch',
+          style: TextStyle(color: Colors.white),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -721,7 +873,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white70)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white70),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -729,21 +884,27 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               final name = nameController.text.trim();
               final type = typeController.text.trim();
 
-              if (name.isNotEmpty && type.isNotEmpty && price != null && price > 0) {
+              if (name.isNotEmpty &&
+                  type.isNotEmpty &&
+                  price != null &&
+                  price > 0) {
                 Navigator.pop(dialogContext);
                 Navigator.pop(context);
                 context.read<OwnerBloc>().add(
-                      AddCourtRequested(
-                        turfId: turfId,
-                        name: name,
-                        type: type,
-                        pricePerHour: price,
-                        sports: const ['c1234567-89ab-cdef-0123-456789abcdef'],
-                      ),
-                    );
+                  AddCourtRequested(
+                    turfId: turfId,
+                    name: name,
+                    type: type,
+                    pricePerHour: price,
+                    sports: const ['c1234567-89ab-cdef-0123-456789abcdef'],
+                  ),
+                );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please enter valid court details'), backgroundColor: Colors.red),
+                  const SnackBar(
+                    content: Text('Please enter valid court details'),
+                    backgroundColor: Colors.red,
+                  ),
                 );
               }
             },
@@ -751,7 +912,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: Colors.black,
             ),
-            child: const Text('Save Pitch', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Save Pitch',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -765,12 +929,12 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: const Color(0xFF151D30),
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (sheetContext) {
         return MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: context.read<OwnerBloc>()),
-          ],
+          providers: [BlocProvider.value(value: context.read<OwnerBloc>())],
           child: BlocBuilder<OwnerBloc, OwnerState>(
             builder: (context, state) {
               List<dynamic> templates = [];
@@ -798,11 +962,21 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                             children: [
                               Text(
                                 '${court['name']} Templates',
-                                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              const Text('Configure weekly operational slots', style: TextStyle(color: Colors.white38, fontSize: 12)),
+                              const Text(
+                                'Configure weekly operational slots',
+                                style: TextStyle(
+                                  color: Colors.white38,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -813,9 +987,13 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                           icon: const Icon(Icons.add, size: 16),
                           label: const Text('Add Slot'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
                             foregroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
                         ),
                       ],
@@ -827,7 +1005,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                         child: Center(
                           child: Text(
                             'No slot templates configured yet.',
-                            style: TextStyle(color: Colors.white38, fontSize: 13),
+                            style: TextStyle(
+                              color: Colors.white38,
+                              fontSize: 13,
+                            ),
                           ),
                         ),
                       )
@@ -838,31 +1019,41 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                           itemCount: templates.length,
                           itemBuilder: (context, index) {
                             final template = templates[index];
-                            final dayName = _getDayName(template['dayOfWeek'] as int);
-                            final overrideText = template['priceOverride'] != null
+                            final dayName = _getDayName(
+                              template['dayOfWeek'] as int,
+                            );
+                            final overrideText =
+                                template['priceOverride'] != null
                                 ? '₹${(template['priceOverride'] as num).toInt()} Override'
                                 : 'Base Price';
 
                             return Container(
                               margin: const EdgeInsets.only(bottom: 12),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.04),
+                                color: Colors.white.withValues(alpha: 0.04),
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(color: Colors.white10),
                               ),
                               padding: const EdgeInsets.all(12),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     '$dayName: ${template['startTime']} - ${template['endTime']}',
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                    ),
                                   ),
                                   Text(
                                     overrideText,
                                     style: TextStyle(
                                       color: template['priceOverride'] != null
-                                          ? Theme.of(context).colorScheme.primary
+                                          ? Theme.of(
+                                              context,
+                                            ).colorScheme.primary
                                           : Colors.white38,
                                       fontSize: 12,
                                     ),
@@ -906,12 +1097,15 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
 
           return AlertDialog(
             backgroundColor: const Color(0xFF151D30),
-            title: const Text('Add Slot Template', style: TextStyle(color: Colors.white)),
+            title: const Text(
+              'Add Slot Template',
+              style: TextStyle(color: Colors.white),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 DropdownButtonFormField<int>(
-                  value: dayVal,
+                  initialValue: dayVal,
                   dropdownColor: const Color(0xFF151D30),
                   style: const TextStyle(color: Colors.white),
                   items: daysList.map((d) {
@@ -961,7 +1155,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(dialogContext),
-                child: const Text('Cancel', style: TextStyle(color: Colors.white70)),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.white70),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -973,21 +1170,24 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                     Navigator.pop(dialogContext);
                     Navigator.pop(context);
                     context.read<OwnerBloc>().add(
-                          CreateCourtTemplateRequested(
-                            courtId: courtId,
-                            dayOfWeek: dayVal,
-                            startTime: start,
-                            endTime: end,
-                            priceOverride: override,
-                          ),
-                        );
+                      CreateCourtTemplateRequested(
+                        courtId: courtId,
+                        dayOfWeek: dayVal,
+                        startTime: start,
+                        endTime: end,
+                        priceOverride: override,
+                      ),
+                    );
                   }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Colors.black,
                 ),
-                child: const Text('Save Slot', style: TextStyle(fontWeight: FontWeight.bold)),
+                child: const Text(
+                  'Save Slot',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           );
@@ -997,7 +1197,15 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   }
 
   String _getDayName(int d) {
-    final days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    final days = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
     if (d >= 0 && d < days.length) return days[d];
     return 'Sunday';
   }
@@ -1011,7 +1219,7 @@ class _AnalyticsBarChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..style = PaintingStyle.fill;
-     final textPainter = TextPainter(textDirection: ui.TextDirection.ltr);
+    final textPainter = TextPainter(textDirection: ui.TextDirection.ltr);
 
     if (monthlyStats.isEmpty) {
       // Draw placeholder text
@@ -1020,15 +1228,23 @@ class _AnalyticsBarChartPainter extends CustomPainter {
         style: TextStyle(color: Colors.white38, fontSize: 12),
       );
       textPainter.layout();
-      textPainter.paint(canvas, Offset((size.width - textPainter.width) / 2, (size.height - textPainter.height) / 2));
+      textPainter.paint(
+        canvas,
+        Offset(
+          (size.width - textPainter.width) / 2,
+          (size.height - textPainter.height) / 2,
+        ),
+      );
       return;
     }
 
     // 1. Calculate boundaries and metrics scales
-    final maxRevenue = monthlyStats.map((e) => (e['revenue'] as num).toDouble()).reduce((a, b) => a > b ? a : b);
+    final maxRevenue = monthlyStats
+        .map((e) => (e['revenue'] as num).toDouble())
+        .reduce((a, b) => a > b ? a : b);
     final maxVal = maxRevenue > 0 ? maxRevenue : 1000.0;
 
-    final double padding = 20.0;
+    const double padding = 20.0;
     final double graphWidth = size.width - 2 * padding;
     final double graphHeight = size.height - 30.0;
 
@@ -1044,7 +1260,8 @@ class _AnalyticsBarChartPainter extends CustomPainter {
       final double heightRatio = revenue / maxVal;
       final double barHeight = graphHeight * heightRatio;
 
-      final double xPos = padding + i * (barWidth + barSpacing) + barSpacing / 2;
+      final double xPos =
+          padding + i * (barWidth + barSpacing) + barSpacing / 2;
       final double yPos = graphHeight - barHeight;
 
       // Draw active bar
@@ -1060,10 +1277,17 @@ class _AnalyticsBarChartPainter extends CustomPainter {
       // Draw label text
       textPainter.text = TextSpan(
         text: month,
-        style: const TextStyle(color: Colors.white60, fontSize: 10, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          color: Colors.white60,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
       );
       textPainter.layout();
-      textPainter.paint(canvas, Offset(xPos + (barWidth - textPainter.width) / 2, graphHeight + 6));
+      textPainter.paint(
+        canvas,
+        Offset(xPos + (barWidth - textPainter.width) / 2, graphHeight + 6),
+      );
     }
   }
 

@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentTabIndex,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: theme.colorScheme.background,
+        backgroundColor: theme.colorScheme.surface,
         selectedItemColor: primaryColor,
         unselectedItemColor: Colors.white38,
         showSelectedLabels: true,

@@ -16,7 +16,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _businessNameController = TextEditingController();
   bool _obscurePassword = true;
+  String _accountType = 'USER';
 
   @override
   void dispose() {
@@ -24,6 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _emailController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
+    _businessNameController.dispose();
     super.dispose();
   }
 
@@ -34,7 +37,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _emailController.text.trim(),
           _passwordController.text,
           _nameController.text.trim(),
-          _phoneController.text.trim().isEmpty ? null : _phoneController.text.trim(),
+          _phoneController.text.trim().isEmpty
+              ? null
+              : _phoneController.text.trim(),
+          accountType: _accountType,
+          businessName: _accountType == 'OWNER'
+              ? _businessNameController.text.trim()
+              : null,
         ),
       );
     }
@@ -97,6 +106,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(height: 36),
 
+                      SegmentedButton<String>(
+                        segments: const [
+                          ButtonSegment(
+                            value: 'USER',
+                            icon: Icon(Icons.person_outline),
+                            label: Text('Player'),
+                          ),
+                          ButtonSegment(
+                            value: 'OWNER',
+                            icon: Icon(Icons.storefront_outlined),
+                            label: Text('Turf owner'),
+                          ),
+                        ],
+                        selected: {_accountType},
+                        onSelectionChanged: isLoading
+                            ? null
+                            : (value) =>
+                                  setState(() => _accountType = value.first),
+                      ),
+                      if (_accountType == 'OWNER') ...[
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Your owner application will be reviewed before you can access the partner dashboard.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70, fontSize: 13),
+                        ),
+                      ],
+                      const SizedBox(height: 20),
+
                       // Name Field
                       TextFormField(
                         controller: _nameController,
@@ -105,7 +143,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                           labelText: 'Full Name',
-                          prefixIcon: Icon(Icons.person_outline, color: Colors.white70),
+                          prefixIcon: Icon(
+                            Icons.person_outline,
+                            color: Colors.white70,
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -116,6 +157,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(height: 16),
 
+                      if (_accountType == 'OWNER') ...[
+                        TextFormField(
+                          controller: _businessNameController,
+                          enabled: !isLoading,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: const InputDecoration(
+                            labelText: 'Business / Turf Name',
+                            prefixIcon: Icon(
+                              Icons.business_outlined,
+                              color: Colors.white70,
+                            ),
+                          ),
+                          validator: (value) {
+                            if (_accountType == 'OWNER' &&
+                                (value == null || value.trim().length < 3)) {
+                              return 'Please enter your business name';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+
                       // Email Field
                       TextFormField(
                         controller: _emailController,
@@ -124,13 +188,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                           labelText: 'Email Address',
-                          prefixIcon: Icon(Icons.email_outlined, color: Colors.white70),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: Colors.white70,
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Please enter your email';
                           }
-                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
+                          if (!RegExp(
+                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          ).hasMatch(value.trim())) {
                             return 'Please enter a valid email';
                           }
                           return null;
@@ -146,7 +215,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                           labelText: 'Phone Number (Optional)',
-                          prefixIcon: Icon(Icons.phone_outlined, color: Colors.white70),
+                          prefixIcon: Icon(
+                            Icons.phone_outlined,
+                            color: Colors.white70,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -159,10 +231,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           labelText: 'Password',
-                          prefixIcon: const Icon(Icons.lock_outline, color: Colors.white70),
+                          prefixIcon: const Icon(
+                            Icons.lock_outline,
+                            color: Colors.white70,
+                          ),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
                               color: Colors.white70,
                             ),
                             onPressed: () {
@@ -201,7 +278,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 width: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation(Colors.black),
+                                  valueColor: AlwaysStoppedAnimation(
+                                    Colors.black,
+                                  ),
                                 ),
                               )
                             : const Text(

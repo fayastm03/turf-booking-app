@@ -2,6 +2,7 @@ import { prisma } from '../../db/prisma';
 import { redis } from '../../db/redis';
 import { BookingStatus, SlotStatus, Slot } from '@prisma/client';
 import Razorpay from 'razorpay';
+import crypto from 'crypto';
 import { config } from '../../config';
 
 const razorpay = new Razorpay({
@@ -116,7 +117,7 @@ export async function holdSlot(userId: string, slotId: string, offerCode?: strin
   };
 }
 
-export async function createRazorpayOrder(bookingId: string) {
+export async function createRazorpayOrder(userId: string, bookingId: string) {
   const booking = await prisma.booking.findUnique({
     where: { id: bookingId },
     include: { slot: true },
@@ -126,13 +127,17 @@ export async function createRazorpayOrder(bookingId: string) {
     throw new Error('Booking not found');
   }
 
+  if (booking.userId !== userId) {
+    throw new Error('Unauthorized to pay for this booking');
+  }
+
   if (booking.status !== BookingStatus.PENDING_PAYMENT) {
     throw new Error(`Cannot create order for booking with status: ${booking.status}`);
   }
 
   // Ensure hold hasn't expired
-  const lockExists = await redis.get(`hold:${booking.slotId}`);
-  if (!lockExists) {
+  const lockOwner = await redis.get(`hold:${booking.slotId}`);
+  if (lockOwner !== userId) {
     await prisma.$transaction([
       prisma.booking.update({
         where: { id: bookingId },
@@ -192,6 +197,10 @@ export async function confirmBooking(razorpayOrderId: string, razorpayPaymentId:
       return booking;
     }
 
+    if (booking.status !== BookingStatus.PENDING_PAYMENT) {
+      throw new Error(`Cannot confirm booking with status: ${booking.status}`);
+    }
+
     // Confirm booking and set slot as BOOKED
     const updatedBooking = await tx.booking.update({
       where: { id: booking.id },
@@ -232,6 +241,29 @@ export async function confirmBooking(razorpayOrderId: string, razorpayPaymentId:
 
     return updatedBooking;
   });
+}
+
+export async function verifyAndConfirmPayment(
+  userId: string,
+  razorpayOrderId: string,
+  razorpayPaymentId: string,
+  razorpaySignature: string,
+) {
+  const booking = await prisma.booking.findUnique({ where: { razorpayOrderId } });
+  if (!booking || booking.userId !== userId) {
+    throw new Error('Booking not found');
+  }
+
+  const expectedSignature = crypto
+    .createHmac('sha256', config.RAZORPAY_KEY_SECRET)
+    .update(`${razorpayOrderId}|${razorpayPaymentId}`)
+    .digest('hex');
+
+  if (expectedSignature !== razorpaySignature) {
+    throw new Error('Payment verification failed');
+  }
+
+  return confirmBooking(razorpayOrderId, razorpayPaymentId);
 }
 
 export async function cancelBooking(userId: string, bookingId: string, isAdmin = false) {

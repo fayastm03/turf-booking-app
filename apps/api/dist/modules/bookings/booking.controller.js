@@ -67,8 +67,27 @@ async function bookingRoutes(fastify, options) {
     fastify.post('/bookings/:id/create-order', async (request, reply) => {
         const { id: bookingId } = request.params;
         try {
-            const orderDetails = await bookingService.createRazorpayOrder(bookingId);
+            const orderDetails = await bookingService.createRazorpayOrder(request.user.id, bookingId);
             return reply.status(200).send(orderDetails);
+        }
+        catch (err) {
+            return reply.status(400).send({ error: 'Bad Request', message: err.message });
+        }
+    });
+    // POST /bookings/verify-payment - Verify the Razorpay client signature before confirming.
+    fastify.post('/bookings/verify-payment', async (request, reply) => {
+        const schema = zod_1.z.object({
+            razorpayOrderId: zod_1.z.string().min(1),
+            razorpayPaymentId: zod_1.z.string().min(1),
+            razorpaySignature: zod_1.z.string().min(1),
+        });
+        const parsed = schema.safeParse(request.body);
+        if (!parsed.success) {
+            return reply.status(400).send({ error: 'Bad Request', message: parsed.error.format() });
+        }
+        try {
+            const booking = await bookingService.verifyAndConfirmPayment(request.user.id, parsed.data.razorpayOrderId, parsed.data.razorpayPaymentId, parsed.data.razorpaySignature);
+            return reply.status(200).send(booking);
         }
         catch (err) {
             return reply.status(400).send({ error: 'Bad Request', message: err.message });

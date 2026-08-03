@@ -71,23 +71,25 @@ class TurfDetailLoaded extends TurfDetailState {
       isLoadingSlots: isLoadingSlots ?? this.isLoadingSlots,
       isSubmittingReview: isSubmittingReview ?? this.isSubmittingReview,
       reviewError: clearReviewStatus ? null : (reviewError ?? this.reviewError),
-      reviewSuccess: clearReviewStatus ? false : (reviewSuccess ?? this.reviewSuccess),
+      reviewSuccess: clearReviewStatus
+          ? false
+          : (reviewSuccess ?? this.reviewSuccess),
     );
   }
 
   @override
   List<Object?> get props => [
-        turf,
-        slots,
-        reviews,
-        selectedDate,
-        selectedCourt,
-        selectedSlot,
-        isLoadingSlots,
-        isSubmittingReview,
-        reviewError,
-        reviewSuccess,
-      ];
+    turf,
+    slots,
+    reviews,
+    selectedDate,
+    selectedCourt,
+    selectedSlot,
+    isLoadingSlots,
+    isSubmittingReview,
+    reviewError,
+    reviewSuccess,
+  ];
 }
 
 class TurfDetailFailure extends TurfDetailState {
@@ -172,72 +174,97 @@ class TurfDetailBloc extends Bloc<TurfDetailEvent, TurfDetailState> {
     on<ClearReviewStatus>(_onClearReviewStatus);
   }
 
-  Future<void> _onLoadTurfDetails(LoadTurfDetails event, Emitter<TurfDetailState> emit) async {
+  Future<void> _onLoadTurfDetails(
+    LoadTurfDetails event,
+    Emitter<TurfDetailState> emit,
+  ) async {
     emit(TurfDetailLoading());
     try {
       final turf = await _turfRepository.getTurfById(event.turfId);
       final today = DateTime.now();
       final dateStr = _formatDate(today);
 
-      final slots = await _turfRepository.getSlotsForTurf(event.turfId, dateStr);
+      final slots = await _turfRepository.getSlotsForTurf(
+        event.turfId,
+        dateStr,
+      );
       final reviews = await _turfRepository.getReviewsForTurf(event.turfId);
 
       final selectedCourt = turf.courts.isNotEmpty ? turf.courts.first : null;
 
-      emit(TurfDetailLoaded(
-        turf: turf,
-        slots: slots,
-        reviews: reviews,
-        selectedDate: today,
-        selectedCourt: selectedCourt,
-      ));
+      emit(
+        TurfDetailLoaded(
+          turf: turf,
+          slots: slots,
+          reviews: reviews,
+          selectedDate: today,
+          selectedCourt: selectedCourt,
+        ),
+      );
     } catch (e) {
       emit(TurfDetailFailure(e.toString().replaceAll('Exception: ', '')));
     }
   }
 
-  Future<void> _onChangeSelectedDate(ChangeSelectedDate event, Emitter<TurfDetailState> emit) async {
+  Future<void> _onChangeSelectedDate(
+    ChangeSelectedDate event,
+    Emitter<TurfDetailState> emit,
+  ) async {
     final currentState = state;
     if (currentState is TurfDetailLoaded) {
       emit(currentState.copyWith(isLoadingSlots: true, clearSlot: true));
       try {
         final dateStr = _formatDate(event.date);
-        final slots = await _turfRepository.getSlotsForTurf(currentState.turf.id, dateStr);
+        final slots = await _turfRepository.getSlotsForTurf(
+          currentState.turf.id,
+          dateStr,
+        );
 
-        emit(currentState.copyWith(
-          slots: slots,
-          selectedDate: event.date,
-          isLoadingSlots: false,
-        ));
+        emit(
+          currentState.copyWith(
+            slots: slots,
+            selectedDate: event.date,
+            isLoadingSlots: false,
+          ),
+        );
       } catch (e) {
         emit(TurfDetailFailure(e.toString().replaceAll('Exception: ', '')));
       }
     }
   }
 
-  void _onChangeSelectedCourt(ChangeSelectedCourt event, Emitter<TurfDetailState> emit) {
+  void _onChangeSelectedCourt(
+    ChangeSelectedCourt event,
+    Emitter<TurfDetailState> emit,
+  ) {
     final currentState = state;
     if (currentState is TurfDetailLoaded) {
-      emit(currentState.copyWith(
-        selectedCourt: event.court,
-        clearSlot: true,
-      ));
+      emit(currentState.copyWith(selectedCourt: event.court, clearSlot: true));
     }
   }
 
-  void _onSelectBookingSlot(SelectBookingSlot event, Emitter<TurfDetailState> emit) {
+  void _onSelectBookingSlot(
+    SelectBookingSlot event,
+    Emitter<TurfDetailState> emit,
+  ) {
     final currentState = state;
     if (currentState is TurfDetailLoaded) {
-      emit(currentState.copyWith(
-        selectedSlot: event.slot,
-      ));
+      emit(currentState.copyWith(selectedSlot: event.slot));
     }
   }
 
-  Future<void> _onSubmitReview(SubmitReviewRequested event, Emitter<TurfDetailState> emit) async {
+  Future<void> _onSubmitReview(
+    SubmitReviewRequested event,
+    Emitter<TurfDetailState> emit,
+  ) async {
     final currentState = state;
     if (currentState is TurfDetailLoaded) {
-      emit(currentState.copyWith(isSubmittingReview: true, clearReviewStatus: true));
+      emit(
+        currentState.copyWith(
+          isSubmittingReview: true,
+          clearReviewStatus: true,
+        ),
+      );
       try {
         await _turfRepository.submitReview(
           currentState.turf.id,
@@ -246,23 +273,32 @@ class TurfDetailBloc extends Bloc<TurfDetailEvent, TurfDetailState> {
         );
 
         // Re-fetch reviews to update the list
-        final reviews = await _turfRepository.getReviewsForTurf(currentState.turf.id);
+        final reviews = await _turfRepository.getReviewsForTurf(
+          currentState.turf.id,
+        );
 
-        emit(currentState.copyWith(
-          isSubmittingReview: false,
-          reviews: reviews,
-          reviewSuccess: true,
-        ));
+        emit(
+          currentState.copyWith(
+            isSubmittingReview: false,
+            reviews: reviews,
+            reviewSuccess: true,
+          ),
+        );
       } catch (e) {
-        emit(currentState.copyWith(
-          isSubmittingReview: false,
-          reviewError: e.toString().replaceAll('Exception: ', ''),
-        ));
+        emit(
+          currentState.copyWith(
+            isSubmittingReview: false,
+            reviewError: e.toString().replaceAll('Exception: ', ''),
+          ),
+        );
       }
     }
   }
 
-  void _onClearReviewStatus(ClearReviewStatus event, Emitter<TurfDetailState> emit) {
+  void _onClearReviewStatus(
+    ClearReviewStatus event,
+    Emitter<TurfDetailState> emit,
+  ) {
     final currentState = state;
     if (currentState is TurfDetailLoaded) {
       emit(currentState.copyWith(clearReviewStatus: true));

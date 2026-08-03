@@ -11,9 +11,15 @@ class NotificationRepository {
     try {
       final response = await _apiClient.dio.get('/notifications');
       final data = response.data as List<dynamic>;
-      return data.map((json) => NotificationModel.fromJson(json as Map<String, dynamic>)).toList();
+      return data
+          .map(
+            (json) => NotificationModel.fromJson(json as Map<String, dynamic>),
+          )
+          .toList();
     } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Failed to retrieve notifications');
+      throw Exception(
+        e.response?.data['message'] ?? 'Failed to retrieve notifications',
+      );
     }
   }
 
@@ -22,7 +28,9 @@ class NotificationRepository {
       final response = await _apiClient.dio.put('/notifications/$id/read');
       return NotificationModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Failed to mark notification as read');
+      throw Exception(
+        e.response?.data['message'] ?? 'Failed to mark notification as read',
+      );
     }
   }
 
@@ -30,9 +38,15 @@ class NotificationRepository {
     try {
       final response = await _apiClient.dio.put('/notifications/read-all');
       final data = response.data as List<dynamic>;
-      return data.map((json) => NotificationModel.fromJson(json as Map<String, dynamic>)).toList();
+      return data
+          .map(
+            (json) => NotificationModel.fromJson(json as Map<String, dynamic>),
+          )
+          .toList();
     } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Failed to mark all as read');
+      throw Exception(
+        e.response?.data['message'] ?? 'Failed to mark all as read',
+      );
     }
   }
 }

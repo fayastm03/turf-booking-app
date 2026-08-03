@@ -60,7 +60,7 @@ final GoRouter appRouter = GoRouter(
       return '/';
     }
 
-    final user = (authState as Authenticated).user;
+    final user = (authState).user;
     final roles = List<String>.from(user['roles'] ?? []);
 
     // Role Guards

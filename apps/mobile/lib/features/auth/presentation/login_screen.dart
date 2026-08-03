@@ -15,6 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  String _accountType = 'USER';
 
   @override
   void dispose() {
@@ -29,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
         LoginRequested(
           _emailController.text.trim(),
           _passwordController.text,
+          accountType: _accountType,
         ),
       );
     }
@@ -67,11 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       // Logo / Header
-                      Icon(
-                        Icons.sports_soccer,
-                        size: 80,
-                        color: primaryColor,
-                      ),
+                      Icon(Icons.sports_soccer, size: 80, color: primaryColor),
                       const SizedBox(height: 16),
                       Text(
                         'TURF SPOT',
@@ -91,6 +89,38 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 48),
 
+                      SegmentedButton<String>(
+                        segments: const [
+                          ButtonSegment(
+                            value: 'USER',
+                            icon: Icon(Icons.person_outline),
+                            label: Text('Player'),
+                          ),
+                          ButtonSegment(
+                            value: 'OWNER',
+                            icon: Icon(Icons.storefront_outlined),
+                            label: Text('Turf owner'),
+                          ),
+                        ],
+                        selected: {_accountType},
+                        onSelectionChanged: isLoading
+                            ? null
+                            : (value) =>
+                                  setState(() => _accountType = value.first),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        _accountType == 'OWNER'
+                            ? 'Use your approved turf-owner email to access the partner dashboard.'
+                            : 'Use your player email to discover and book fields.',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
                       // Email Field
                       TextFormField(
                         controller: _emailController,
@@ -99,13 +129,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                           labelText: 'Email Address',
-                          prefixIcon: Icon(Icons.email_outlined, color: Colors.white70),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: Colors.white70,
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Please enter your email';
                           }
-                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
+                          if (!RegExp(
+                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          ).hasMatch(value.trim())) {
                             return 'Please enter a valid email';
                           }
                           return null;
@@ -121,10 +156,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           labelText: 'Password',
-                          prefixIcon: const Icon(Icons.lock_outline, color: Colors.white70),
+                          prefixIcon: const Icon(
+                            Icons.lock_outline,
+                            color: Colors.white70,
+                          ),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
                               color: Colors.white70,
                             ),
                             onPressed: () {
@@ -163,12 +203,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                 width: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation(Colors.black),
+                                  valueColor: AlwaysStoppedAnimation(
+                                    Colors.black,
+                                  ),
                                 ),
                               )
-                            : const Text(
-                                'Login',
-                                style: TextStyle(
+                            : Text(
+                                _accountType == 'OWNER'
+                                    ? 'Owner Login'
+                                    : 'Player Login',
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -206,7 +250,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           Expanded(child: Divider(color: Colors.white24)),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Text('OR CONNECT WITH', style: TextStyle(color: Colors.white30, fontSize: 12)),
+                            child: Text(
+                              'OR CONNECT WITH',
+                              style: TextStyle(
+                                color: Colors.white30,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
                           Expanded(child: Divider(color: Colors.white24)),
                         ],
@@ -263,9 +313,7 @@ class _SocialButton extends StatelessWidget {
         foregroundColor: Colors.white,
         side: const BorderSide(color: Colors.white12),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       icon: Icon(icon, size: 24),
       label: Text(label),

@@ -10,7 +10,7 @@ class BookingRepository {
     try {
       final response = await _apiClient.dio.post('/bookings/hold', data: {
         'slotId': slotId,
-        if (offerCode != null) 'offerCode': offerCode,
+        'offerCode': offerCode,
       });
       return response.data;
     } on DioException catch (e) {
@@ -24,6 +24,22 @@ class BookingRepository {
       return response.data;
     } on DioException catch (e) {
       throw Exception(e.response?.data['message'] ?? 'Failed to initiate payment');
+    }
+  }
+
+  Future<void> verifyPayment({
+    required String orderId,
+    required String paymentId,
+    required String signature,
+  }) async {
+    try {
+      await _apiClient.dio.post('/bookings/verify-payment', data: {
+        'razorpayOrderId': orderId,
+        'razorpayPaymentId': paymentId,
+        'razorpaySignature': signature,
+      });
+    } on DioException catch (e) {
+      throw Exception(e.response?.data['message'] ?? 'Payment verification failed');
     }
   }
 

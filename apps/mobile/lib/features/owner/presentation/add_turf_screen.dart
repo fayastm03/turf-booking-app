@@ -19,7 +19,8 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
   final _openController = TextEditingController(text: "06:00");
   final _closeController = TextEditingController(text: "23:00");
 
-  String _selectedCityId = 'c0a37340-dfbd-497b-83c8-ee1bc7f0b5d9'; // Default Mumbai
+  String _selectedCityId =
+      'c0a37340-dfbd-497b-83c8-ee1bc7f0b5d9'; // Default Mumbai
 
   @override
   void dispose() {
@@ -50,14 +51,20 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
           if (state is OwnerLoaded) {
             if (state.actionSuccessMsg != null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.actionSuccessMsg!), backgroundColor: Colors.green),
+                SnackBar(
+                  content: Text(state.actionSuccessMsg!),
+                  backgroundColor: Colors.green,
+                ),
               );
               context.read<OwnerBloc>().add(ClearOwnerStatus());
               context.pop(); // Pop back on success
             }
             if (state.actionError != null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.actionError!), backgroundColor: theme.colorScheme.error),
+                SnackBar(
+                  content: Text(state.actionError!),
+                  backgroundColor: theme.colorScheme.error,
+                ),
               );
               context.read<OwnerBloc>().add(ClearOwnerStatus());
             }
@@ -75,21 +82,29 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
                 children: [
                   const Text(
                     'Facility Details',
-                    style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   // Name
                   _buildTextField(
                     controller: _nameController,
                     hint: 'Turf Name (e.g. KickOff Arena)',
-                    validator: (v) => v == null || v.length < 3 ? 'Name must be at least 3 characters' : null,
+                    validator: (v) => v == null || v.length < 3
+                        ? 'Name must be at least 3 characters'
+                        : null,
                   ),
                   const SizedBox(height: 16),
                   // Address
                   _buildTextField(
                     controller: _addressController,
                     hint: 'Address',
-                    validator: (v) => v == null || v.length < 5 ? 'Address must be at least 5 characters' : null,
+                    validator: (v) => v == null || v.length < 5
+                        ? 'Address must be at least 5 characters'
+                        : null,
                   ),
                   const SizedBox(height: 16),
                   // City Dropdown
@@ -100,12 +115,18 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
                     controller: _descController,
                     hint: 'Description (amenities overview, guidelines...)',
                     maxLines: 3,
-                    validator: (v) => v == null || v.length < 10 ? 'Description must be at least 10 characters' : null,
+                    validator: (v) => v == null || v.length < 10
+                        ? 'Description must be at least 10 characters'
+                        : null,
                   ),
                   const SizedBox(height: 24),
                   const Text(
                     'Operational Configurations',
-                    style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   // Base Price
@@ -115,7 +136,9 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
                     keyboardType: TextInputType.number,
                     validator: (v) {
                       final p = double.tryParse(v ?? '');
-                      return p == null || p <= 0 ? 'Price must be a positive number' : null;
+                      return p == null || p <= 0
+                          ? 'Price must be a positive number'
+                          : null;
                     },
                   ),
                   const SizedBox(height: 16),
@@ -126,7 +149,13 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
                         child: _buildTextField(
                           controller: _openController,
                           hint: 'Open Time (HH:MM)',
-                          validator: (v) => v == null || !RegExp(r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$').hasMatch(v) ? 'Format: HH:MM' : null,
+                          validator: (v) =>
+                              v == null ||
+                                  !RegExp(
+                                    r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$',
+                                  ).hasMatch(v)
+                              ? 'Format: HH:MM'
+                              : null,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -134,7 +163,13 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
                         child: _buildTextField(
                           controller: _closeController,
                           hint: 'Close Time (HH:MM)',
-                          validator: (v) => v == null || !RegExp(r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$').hasMatch(v) ? 'Format: HH:MM' : null,
+                          validator: (v) =>
+                              v == null ||
+                                  !RegExp(
+                                    r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$',
+                                  ).hasMatch(v)
+                              ? 'Format: HH:MM'
+                              : null,
                         ),
                       ),
                     ],
@@ -149,33 +184,43 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
                           : () {
                               if (_formKey.currentState!.validate()) {
                                 context.read<OwnerBloc>().add(
-                                      RegisterTurfRequested(
-                                        name: _nameController.text.trim(),
-                                        description: _descController.text.trim(),
-                                        address: _addressController.text.trim(),
-                                        cityId: _selectedCityId,
-                                        basePricePerHour: double.parse(_priceController.text.trim()),
-                                        openingTime: _openController.text.trim(),
-                                        closingTime: _closeController.text.trim(),
-                                        images: const [
-                                          'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=600&auto=format&fit=crop&q=80'
-                                        ],
-                                        amenities: const [
-                                          'a0c1c2d3-e4f5-0123-4567-89abcdef0123', // WiFi seed
-                                          'a1c1c2d3-e4f5-0123-4567-89abcdef0123'  // Parking seed
-                                        ],
-                                      ),
-                                    );
+                                  RegisterTurfRequested(
+                                    name: _nameController.text.trim(),
+                                    description: _descController.text.trim(),
+                                    address: _addressController.text.trim(),
+                                    cityId: _selectedCityId,
+                                    basePricePerHour: double.parse(
+                                      _priceController.text.trim(),
+                                    ),
+                                    openingTime: _openController.text.trim(),
+                                    closingTime: _closeController.text.trim(),
+                                    images: const [
+                                      'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=600&auto=format&fit=crop&q=80',
+                                    ],
+                                    amenities: const [
+                                      'a0c1c2d3-e4f5-0123-4567-89abcdef0123', // WiFi seed
+                                      'a1c1c2d3-e4f5-0123-4567-89abcdef0123', // Parking seed
+                                    ],
+                                  ),
+                                );
                               }
                             },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
                         foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child: isLoading
                           ? const CircularProgressIndicator(color: Colors.black)
-                          : const Text('Register Turf Facility', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          : const Text(
+                              'Register Turf Facility',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
                     ),
                   ),
                 ],
@@ -233,7 +278,7 @@ class _AddTurfScreenState extends State<AddTurfScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: DropdownButtonHideUnderline(
         child: DropdownButtonFormField<String>(
-          value: _selectedCityId,
+          initialValue: _selectedCityId,
           dropdownColor: const Color(0xFF151D30),
           style: const TextStyle(color: Colors.white),
           decoration: const InputDecoration(

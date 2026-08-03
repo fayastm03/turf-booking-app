@@ -12,15 +12,18 @@ class WalletRepository {
       final response = await _apiClient.dio.get('/wallet');
       return Wallet.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Failed to retrieve wallet information');
+      throw Exception(
+        e.response?.data['message'] ?? 'Failed to retrieve wallet information',
+      );
     }
   }
 
   Future<Wallet> topupWallet(double amount) async {
     try {
-      final response = await _apiClient.dio.post('/wallet/topup', data: {
-        'amount': amount,
-      });
+      final response = await _apiClient.dio.post(
+        '/wallet/topup',
+        data: {'amount': amount},
+      );
       return Wallet.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw Exception(e.response?.data['message'] ?? 'Failed to top-up wallet');
@@ -29,12 +32,15 @@ class WalletRepository {
 
   Future<Map<String, dynamic>> payFromWallet(String bookingId) async {
     try {
-      final response = await _apiClient.dio.post('/wallet/pay', data: {
-        'bookingId': bookingId,
-      });
+      final response = await _apiClient.dio.post(
+        '/wallet/pay',
+        data: {'bookingId': bookingId},
+      );
       return response.data;
     } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Payment via wallet failed');
+      throw Exception(
+        e.response?.data['message'] ?? 'Payment via wallet failed',
+      );
     }
   }
 }

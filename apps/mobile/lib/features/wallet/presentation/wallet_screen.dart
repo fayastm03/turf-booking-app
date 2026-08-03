@@ -23,8 +23,6 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final primaryColor = theme.colorScheme.primary;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Turf Wallet'),
@@ -36,16 +34,23 @@ class _WalletScreenState extends State<WalletScreen> {
       body: BlocConsumer<WalletBloc, WalletState>(
         listener: (context, state) {
           if (state is WalletLoaded) {
-            if (state.actionSuccessMsg != null && state.actionSuccessMsg != 'PAYMENT_SUCCESS') {
+            if (state.actionSuccessMsg != null &&
+                state.actionSuccessMsg != 'PAYMENT_SUCCESS') {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.actionSuccessMsg!), backgroundColor: Colors.green),
+                SnackBar(
+                  content: Text(state.actionSuccessMsg!),
+                  backgroundColor: Colors.green,
+                ),
               );
               context.read<WalletBloc>().add(ClearWalletStatus());
             }
 
             if (state.actionError != null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.actionError!), backgroundColor: theme.colorScheme.error),
+                SnackBar(
+                  content: Text(state.actionError!),
+                  backgroundColor: theme.colorScheme.error,
+                ),
               );
               context.read<WalletBloc>().add(ClearWalletStatus());
             }
@@ -61,10 +66,14 @@ class _WalletScreenState extends State<WalletScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Failed to load wallet: ${state.error}', style: const TextStyle(color: Colors.white70)),
+                  Text(
+                    'Failed to load wallet: ${state.error}',
+                    style: const TextStyle(color: Colors.white70),
+                  ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => context.read<WalletBloc>().add(LoadWallet()),
+                    onPressed: () =>
+                        context.read<WalletBloc>().add(LoadWallet()),
                     child: const Text('Retry'),
                   ),
                 ],
@@ -86,7 +95,11 @@ class _WalletScreenState extends State<WalletScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // 1. Balance Credit Card
-                    _buildBalanceCard(context, wallet.balance, state.isActionInProgress),
+                    _buildBalanceCard(
+                      context,
+                      wallet.balance,
+                      state.isActionInProgress,
+                    ),
                     const SizedBox(height: 28),
 
                     // 2. Transaction Logs Header
@@ -113,7 +126,11 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  Widget _buildBalanceCard(BuildContext context, double balance, bool isProgress) {
+  Widget _buildBalanceCard(
+    BuildContext context,
+    double balance,
+    bool isProgress,
+  ) {
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
 
@@ -121,12 +138,21 @@ class _WalletScreenState extends State<WalletScreen> {
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [primaryColor.withOpacity(0.85), primaryColor.withOpacity(0.5)],
+          colors: [
+            primaryColor.withValues(alpha: 0.85),
+            primaryColor.withValues(alpha: 0.5),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
-        boxShadow: const [BoxShadow(color: Colors.black38, blurRadius: 12, offset: Offset(0, 4))],
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black38,
+            blurRadius: 12,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -134,12 +160,21 @@ class _WalletScreenState extends State<WalletScreen> {
         children: [
           const Text(
             'AVAILABLE BALANCE',
-            style: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.0),
+            style: TextStyle(
+              color: Colors.black87,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.0,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             '₹${balance.toStringAsFixed(2)}',
-            style: const TextStyle(color: Colors.black, fontSize: 32, fontWeight: FontWeight.w900),
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 32,
+              fontWeight: FontWeight.w900,
+            ),
           ),
           const SizedBox(height: 24),
           Row(
@@ -151,7 +186,11 @@ class _WalletScreenState extends State<WalletScreen> {
                   SizedBox(width: 6),
                   Text(
                     '100% Safe Payments',
-                    style: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -164,13 +203,28 @@ class _WalletScreenState extends State<WalletScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
                 ),
                 icon: isProgress
-                    ? const SizedBox(width: 14, height: 14, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                    ? const SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
                     : const Icon(Icons.add_circle_outline, size: 18),
-                label: const Text('Add Funds', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                label: const Text(
+                  'Add Funds',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                ),
               ),
             ],
           ),
@@ -179,7 +233,11 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  Widget _buildTransactionsList(BuildContext context, List<dynamic> transactions, ThemeData theme) {
+  Widget _buildTransactionsList(
+    BuildContext context,
+    List<dynamic> transactions,
+    ThemeData theme,
+  ) {
     if (transactions.isEmpty) {
       return const Padding(
         padding: EdgeInsets.symmetric(vertical: 40.0),
@@ -198,7 +256,9 @@ class _WalletScreenState extends State<WalletScreen> {
       itemCount: transactions.length,
       itemBuilder: (context, index) {
         final tx = transactions[index];
-        final isCredit = tx.type.toString().contains('CREDIT') || tx.type.toString().contains('REFUND');
+        final isCredit =
+            tx.type.toString().contains('CREDIT') ||
+            tx.type.toString().contains('REFUND');
         final date = DateTime.parse(tx.createdAt);
         final formattedDate = DateFormat('MMM d, HH:mm').format(date);
 
@@ -214,7 +274,9 @@ class _WalletScreenState extends State<WalletScreen> {
           ),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: isCredit ? Colors.green.withOpacity(0.1) : Colors.redAccent.withOpacity(0.1),
+              backgroundColor: isCredit
+                  ? Colors.green.withValues(alpha: 0.1)
+                  : Colors.redAccent.withValues(alpha: 0.1),
               child: Icon(
                 isCredit ? Icons.arrow_downward : Icons.arrow_upward,
                 color: isCredit ? Colors.green : Colors.redAccent,
@@ -223,7 +285,11 @@ class _WalletScreenState extends State<WalletScreen> {
             ),
             title: Text(
               tx.description ?? (isCredit ? 'Deposit' : 'Debit charge'),
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
             ),
             subtitle: Text(
               formattedDate,
@@ -231,7 +297,11 @@ class _WalletScreenState extends State<WalletScreen> {
             ),
             trailing: Text(
               amountText,
-              style: TextStyle(color: amountColor, fontWeight: FontWeight.w900, fontSize: 16),
+              style: TextStyle(
+                color: amountColor,
+                fontWeight: FontWeight.w900,
+                fontSize: 16,
+              ),
             ),
           ),
         );
@@ -256,7 +326,7 @@ class _WalletScreenState extends State<WalletScreen> {
             const SizedBox(height: 12),
             Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.04),
+                color: Colors.white.withValues(alpha: 0.04),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.white10),
               ),
@@ -264,7 +334,10 @@ class _WalletScreenState extends State<WalletScreen> {
               child: TextField(
                 controller: _amountController,
                 keyboardType: TextInputType.number,
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: const InputDecoration(
                   hintText: 'Enter amount (e.g. ₹500)',
                   hintStyle: TextStyle(color: Colors.white38, fontSize: 13),
@@ -286,7 +359,10 @@ class _WalletScreenState extends State<WalletScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white70)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white70),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -297,12 +373,21 @@ class _WalletScreenState extends State<WalletScreen> {
                 _amountController.clear();
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please enter a valid amount'), backgroundColor: Colors.red),
+                  const SnackBar(
+                    content: Text('Please enter a valid amount'),
+                    backgroundColor: Colors.red,
+                  ),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Colors.black),
-            child: const Text('Add Money', style: TextStyle(fontWeight: FontWeight.bold)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Colors.black,
+            ),
+            child: const Text(
+              'Add Money',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -312,9 +397,16 @@ class _WalletScreenState extends State<WalletScreen> {
   Widget _buildQuickAmountBtn(String label, double val) {
     return ActionChip(
       label: Text(label),
-      labelStyle: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold),
-      backgroundColor: Colors.white.withOpacity(0.05),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: const BorderSide(color: Colors.white10)),
+      labelStyle: const TextStyle(
+        color: Colors.white70,
+        fontSize: 11,
+        fontWeight: FontWeight.bold,
+      ),
+      backgroundColor: Colors.white.withValues(alpha: 0.05),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: const BorderSide(color: Colors.white10),
+      ),
       onPressed: () {
         _amountController.text = val.toInt().toString();
       },

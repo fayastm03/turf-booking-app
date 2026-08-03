@@ -3,11 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Brand Colors
-  static const Color primaryGreenLight = Color(0xFF00875A); // Deep emerald turf green
-  static const Color primaryGreenDark = Color(0xFF00E676);  // Neon turf green
+  static const Color primaryGreenLight = Color(
+    0xFF00875A,
+  ); // Deep emerald turf green
+  static const Color primaryGreenDark = Color(0xFF00E676); // Neon turf green
   static const Color secondaryBlueLight = Color(0xFF0052CC); // Athletic blue
-  static const Color secondaryBlueDark = Color(0xFF00B0FF);  // Electric sky blue
-  
+  static const Color secondaryBlueDark = Color(0xFF00B0FF); // Electric sky blue
+
   static const Color bgLight = Color(0xFFF4F6F9);
   static const Color bgDark = Color(0xFF0A0E17);
   static const Color surfaceLight = Colors.white;
@@ -23,7 +25,6 @@ class AppTheme {
         primary: primaryGreenLight,
         secondary: secondaryBlueLight,
         surface: surfaceLight,
-        background: bgLight,
         onPrimary: Colors.white,
         onSurface: Color(0xFF1E293B),
       ),
@@ -43,13 +44,11 @@ class AppTheme {
         color: surfaceLight,
         elevation: 2,
         shadowColor: Colors.black12,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.black.withOpacity(0.04),
+        fillColor: Colors.black.withValues(alpha: 0.04),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -73,7 +72,6 @@ class AppTheme {
         primary: primaryGreenDark,
         secondary: secondaryBlueDark,
         surface: surfaceDark,
-        background: bgDark,
         onPrimary: Colors.black,
         onSurface: Colors.white,
       ),
@@ -92,9 +90,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: surfaceDark,
         elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,

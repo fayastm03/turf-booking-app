@@ -30,7 +30,9 @@ class LocalStorage {
   Future<void> cacheData(String key, dynamic data, {Duration? ttl}) async {
     final entry = {
       'data': data,
-      'expiry': ttl != null ? DateTime.now().add(ttl).millisecondsSinceEpoch : null,
+      'expiry': ttl != null
+          ? DateTime.now().add(ttl).millisecondsSinceEpoch
+          : null,
     };
     await _cacheBox.put(key, entry);
   }

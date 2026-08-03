@@ -21,12 +21,7 @@ class City {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'state': state,
-      'isActive': isActive,
-    };
+    return {'id': id, 'name': name, 'state': state, 'isActive': isActive};
   }
 }
 
@@ -53,12 +48,7 @@ class Sport {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'iconUrl': iconUrl,
-      'isActive': isActive,
-    };
+    return {'id': id, 'name': name, 'iconUrl': iconUrl, 'isActive': isActive};
   }
 }
 
@@ -67,11 +57,7 @@ class Amenity {
   final String name;
   final String? iconUrl;
 
-  Amenity({
-    required this.id,
-    required this.name,
-    this.iconUrl,
-  });
+  Amenity({required this.id, required this.name, this.iconUrl});
 
   factory Amenity.fromJson(Map<String, dynamic> json) {
     return Amenity(
@@ -82,11 +68,7 @@ class Amenity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'iconUrl': iconUrl,
-    };
+    return {'id': id, 'name': name, 'iconUrl': iconUrl};
   }
 }
 
@@ -95,11 +77,7 @@ class TurfImage {
   final String url;
   final String? publicId;
 
-  TurfImage({
-    required this.id,
-    required this.url,
-    this.publicId,
-  });
+  TurfImage({required this.id, required this.url, this.publicId});
 
   factory TurfImage.fromJson(Map<String, dynamic> json) {
     return TurfImage(
@@ -110,11 +88,7 @@ class TurfImage {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'url': url,
-      'publicId': publicId,
-    };
+    return {'id': id, 'url': url, 'publicId': publicId};
   }
 }
 
@@ -187,7 +161,8 @@ class Court {
       turfId: json['turfId'] as String,
       name: json['name'] as String,
       type: json['type'] as String,
-      sports: (json['sports'] as List<dynamic>?)
+      sports:
+          (json['sports'] as List<dynamic>?)
               ?.map((e) => Sport.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -256,18 +231,23 @@ class Turf {
       description: json['description'] as String,
       address: json['address'] as String,
       cityId: json['cityId'] as String,
-      city: json['city'] != null ? City.fromJson(json['city'] as Map<String, dynamic>) : null,
+      city: json['city'] != null
+          ? City.fromJson(json['city'] as Map<String, dynamic>)
+          : null,
       lat: (json['lat'] as num?)?.toDouble(),
       lng: (json['lng'] as num?)?.toDouble(),
-      images: (json['images'] as List<dynamic>?)
+      images:
+          (json['images'] as List<dynamic>?)
               ?.map((e) => TurfImage.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      amenities: (json['amenities'] as List<dynamic>?)
+      amenities:
+          (json['amenities'] as List<dynamic>?)
               ?.map((e) => Amenity.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      courts: (json['courts'] as List<dynamic>?)
+      courts:
+          (json['courts'] as List<dynamic>?)
               ?.map((e) => Court.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],

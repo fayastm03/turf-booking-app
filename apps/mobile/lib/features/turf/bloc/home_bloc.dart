@@ -50,7 +50,13 @@ class HomeLoaded extends HomeState {
   }
 
   @override
-  List<Object?> get props => [cities, sports, turfs, selectedCity, selectedSport];
+  List<Object?> get props => [
+    cities,
+    sports,
+    turfs,
+    selectedCity,
+    selectedSport,
+  ];
 }
 
 class HomeFailure extends HomeState {
@@ -104,7 +110,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SelectSport>(_onSelectSport);
   }
 
-  Future<void> _onLoadHomeData(LoadHomeData event, Emitter<HomeState> emit) async {
+  Future<void> _onLoadHomeData(
+    LoadHomeData event,
+    Emitter<HomeState> emit,
+  ) async {
     emit(HomeLoading());
     try {
       final cities = await _turfRepository.getCities();
@@ -119,16 +128,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         );
       }
 
-      final turfs = await _turfRepository.getTurfs(
-        cityId: defaultCity?.id,
-      );
+      final turfs = await _turfRepository.getTurfs(cityId: defaultCity?.id);
 
-      emit(HomeLoaded(
-        cities: cities,
-        sports: sports,
-        turfs: turfs,
-        selectedCity: defaultCity,
-      ));
+      emit(
+        HomeLoaded(
+          cities: cities,
+          sports: sports,
+          turfs: turfs,
+          selectedCity: defaultCity,
+        ),
+      );
     } catch (e) {
       emit(HomeFailure(e.toString().replaceAll('Exception: ', '')));
     }
@@ -143,17 +152,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           cityId: event.city.id,
           sportId: currentState.selectedSport?.id,
         );
-        emit(currentState.copyWith(
-          selectedCity: event.city,
-          turfs: turfs,
-        ));
+        emit(currentState.copyWith(selectedCity: event.city, turfs: turfs));
       } catch (e) {
         emit(HomeFailure(e.toString().replaceAll('Exception: ', '')));
       }
     }
   }
 
-  Future<void> _onSelectSport(SelectSport event, Emitter<HomeState> emit) async {
+  Future<void> _onSelectSport(
+    SelectSport event,
+    Emitter<HomeState> emit,
+  ) async {
     final currentState = state;
     if (currentState is HomeLoaded) {
       emit(HomeLoading());
@@ -162,11 +171,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           cityId: currentState.selectedCity?.id,
           sportId: event.sport?.id,
         );
-        emit(currentState.copyWith(
-          selectedSport: event.sport,
-          clearSport: event.sport == null,
-          turfs: turfs,
-        ));
+        emit(
+          currentState.copyWith(
+            selectedSport: event.sport,
+            clearSport: event.sport == null,
+            turfs: turfs,
+          ),
+        );
       } catch (e) {
         emit(HomeFailure(e.toString().replaceAll('Exception: ', '')));
       }

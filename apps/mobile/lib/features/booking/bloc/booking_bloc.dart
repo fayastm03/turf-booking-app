@@ -144,7 +144,20 @@ class CreateRazorpayOrderRequested extends BookingEvent {
   List<Object?> get props => [bookingId];
 }
 
-class PaymentCompleted extends BookingEvent {}
+class PaymentCompleted extends BookingEvent {
+  final String orderId;
+  final String paymentId;
+  final String signature;
+
+  const PaymentCompleted({
+    required this.orderId,
+    required this.paymentId,
+    required this.signature,
+  });
+
+  @override
+  List<Object?> get props => [orderId, paymentId, signature];
+}
 
 class CancelBookingRequested extends BookingEvent {
   final String bookingId;
@@ -171,39 +184,69 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<LoadMyBookingsRequested>(_onLoadMyBookings);
   }
 
-  Future<void> _onHoldSlot(HoldSlotRequested event, Emitter<BookingState> emit) async {
+  Future<void> _onHoldSlot(
+    HoldSlotRequested event,
+    Emitter<BookingState> emit,
+  ) async {
     emit(BookingHoldLoading());
     try {
-      final result = await _bookingRepository.holdSlot(event.slotId, offerCode: event.offerCode);
-      emit(BookingHoldSuccess(
-        bookingId: result['bookingId'],
-        amount: (result['amount'] as num).toDouble(),
-        expiresAt: DateTime.parse(result['expiresAt']),
-      ));
+      final result = await _bookingRepository.holdSlot(
+        event.slotId,
+        offerCode: event.offerCode,
+      );
+      emit(
+        BookingHoldSuccess(
+          bookingId: result['bookingId'],
+          amount: (result['amount'] as num).toDouble(),
+          expiresAt: DateTime.parse(result['expiresAt']),
+        ),
+      );
     } catch (e) {
       emit(BookingHoldFailure(e.toString().replaceAll('Exception: ', '')));
     }
   }
 
-  Future<void> _onCreateRazorpayOrder(CreateRazorpayOrderRequested event, Emitter<BookingState> emit) async {
+  Future<void> _onCreateRazorpayOrder(
+    CreateRazorpayOrderRequested event,
+    Emitter<BookingState> emit,
+  ) async {
     emit(RazorpayOrderLoading());
     try {
-      final result = await _bookingRepository.createRazorpayOrder(event.bookingId);
-      emit(RazorpayOrderSuccess(
-        orderId: result['orderId'],
-        amount: (result['amount'] as num).toDouble(),
-        razorpayKey: result['key'],
-      ));
+      final result = await _bookingRepository.createRazorpayOrder(
+        event.bookingId,
+      );
+      emit(
+        RazorpayOrderSuccess(
+          orderId: result['orderId'],
+          amount: (result['amount'] as num).toDouble(),
+          razorpayKey: result['key'],
+        ),
+      );
     } catch (e) {
       emit(RazorpayOrderFailure(e.toString().replaceAll('Exception: ', '')));
     }
   }
 
-  void _onPaymentCompleted(PaymentCompleted event, Emitter<BookingState> emit) {
-    emit(PaymentSuccess());
+  Future<void> _onPaymentCompleted(
+    PaymentCompleted event,
+    Emitter<BookingState> emit,
+  ) async {
+    try {
+      await _bookingRepository.verifyPayment(
+        orderId: event.orderId,
+        paymentId: event.paymentId,
+        signature: event.signature,
+      );
+      emit(PaymentSuccess());
+    } catch (e) {
+      emit(PaymentFailure(e.toString().replaceAll('Exception: ', '')));
+    }
   }
 
-  Future<void> _onCancelBooking(CancelBookingRequested event, Emitter<BookingState> emit) async {
+  Future<void> _onCancelBooking(
+    CancelBookingRequested event,
+    Emitter<BookingState> emit,
+  ) async {
     emit(CancellationLoading());
     try {
       await _bookingRepository.cancelBooking(event.bookingId);
@@ -213,7 +256,10 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     }
   }
 
-  Future<void> _onLoadMyBookings(LoadMyBookingsRequested event, Emitter<BookingState> emit) async {
+  Future<void> _onLoadMyBookings(
+    LoadMyBookingsRequested event,
+    Emitter<BookingState> emit,
+  ) async {
     emit(MyBookingsLoadInProgress());
     try {
       final bookings = await _bookingRepository.getMyBookings();

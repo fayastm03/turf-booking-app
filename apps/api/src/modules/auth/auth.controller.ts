@@ -13,6 +13,12 @@ export async function authRoutes(fastify: FastifyInstance, options: FastifyPlugi
       password: z.string().min(6),
       name: z.string().min(2),
       phone: z.string().optional(),
+      accountType: z.enum(['USER', 'OWNER']).default('USER'),
+      businessName: z.string().min(3).optional(),
+    }).superRefine((data, ctx) => {
+      if (data.accountType === 'OWNER' && !data.businessName) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['businessName'], message: 'Business name is required for turf owners' });
+      }
     });
 
     const parsed = registerSchema.safeParse(request.body);
@@ -25,7 +31,9 @@ export async function authRoutes(fastify: FastifyInstance, options: FastifyPlugi
         parsed.data.email,
         parsed.data.password,
         parsed.data.name,
-        parsed.data.phone
+        parsed.data.phone,
+        parsed.data.accountType,
+        parsed.data.businessName,
       );
       return reply.status(201).send(tokens);
     } catch (err: any) {
@@ -38,6 +46,7 @@ export async function authRoutes(fastify: FastifyInstance, options: FastifyPlugi
     const loginSchema = z.object({
       email: z.string().email(),
       password: z.string(),
+      accountType: z.enum(['USER', 'OWNER']).default('USER'),
     });
 
     const parsed = loginSchema.safeParse(request.body);
@@ -46,7 +55,7 @@ export async function authRoutes(fastify: FastifyInstance, options: FastifyPlugi
     }
 
     try {
-      const result = await authService.login(parsed.data.email, parsed.data.password);
+      const result = await authService.login(parsed.data.email, parsed.data.password, parsed.data.accountType);
       return reply.status(200).send(result);
     } catch (err: any) {
       return reply.status(401).send({ error: 'Unauthorized', message: err.message });

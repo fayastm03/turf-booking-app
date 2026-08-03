@@ -49,12 +49,21 @@ class OwnerLoaded extends OwnerState {
       analytics: clearAnalytics ? null : (analytics ?? this.analytics),
       isActionInProgress: isActionInProgress ?? this.isActionInProgress,
       actionError: clearStatus ? null : (actionError ?? this.actionError),
-      actionSuccessMsg: clearStatus ? null : (actionSuccessMsg ?? this.actionSuccessMsg),
+      actionSuccessMsg: clearStatus
+          ? null
+          : (actionSuccessMsg ?? this.actionSuccessMsg),
     );
   }
 
   @override
-  List<Object?> get props => [turfs, templates, analytics, isActionInProgress, actionError, actionSuccessMsg];
+  List<Object?> get props => [
+    turfs,
+    templates,
+    analytics,
+    isActionInProgress,
+    actionError,
+    actionSuccessMsg,
+  ];
 }
 
 class OwnerFailure extends OwnerState {
@@ -103,16 +112,16 @@ class RegisterTurfRequested extends OwnerEvent {
 
   @override
   List<Object?> get props => [
-        name,
-        description,
-        address,
-        cityId,
-        basePricePerHour,
-        openingTime,
-        closingTime,
-        images,
-        amenities,
-      ];
+    name,
+    description,
+    address,
+    cityId,
+    basePricePerHour,
+    openingTime,
+    closingTime,
+    images,
+    amenities,
+  ];
 }
 
 class AddCourtRequested extends OwnerEvent {
@@ -174,7 +183,13 @@ class CreateCourtTemplateRequested extends OwnerEvent {
   });
 
   @override
-  List<Object?> get props => [courtId, dayOfWeek, startTime, endTime, priceOverride];
+  List<Object?> get props => [
+    courtId,
+    dayOfWeek,
+    startTime,
+    endTime,
+    priceOverride,
+  ];
 }
 
 class LoadOwnerAnalyticsRequested extends OwnerEvent {}
@@ -198,7 +213,10 @@ class OwnerBloc extends Bloc<OwnerEvent, OwnerState> {
     on<ClearOwnerStatus>(_onClearOwnerStatus);
   }
 
-  Future<void> _onLoadOwnerTurfs(LoadOwnerTurfs event, Emitter<OwnerState> emit) async {
+  Future<void> _onLoadOwnerTurfs(
+    LoadOwnerTurfs event,
+    Emitter<OwnerState> emit,
+  ) async {
     emit(OwnerLoading());
     try {
       final list = await _ownerRepository.getOwnerTurfs();
@@ -208,7 +226,10 @@ class OwnerBloc extends Bloc<OwnerEvent, OwnerState> {
     }
   }
 
-  Future<void> _onRegisterTurf(RegisterTurfRequested event, Emitter<OwnerState> emit) async {
+  Future<void> _onRegisterTurf(
+    RegisterTurfRequested event,
+    Emitter<OwnerState> emit,
+  ) async {
     final currentState = state;
     if (currentState is OwnerLoaded) {
       emit(currentState.copyWith(isActionInProgress: true, clearStatus: true));
@@ -226,21 +247,29 @@ class OwnerBloc extends Bloc<OwnerEvent, OwnerState> {
         );
 
         final list = await _ownerRepository.getOwnerTurfs();
-        emit(currentState.copyWith(
-          turfs: list,
-          isActionInProgress: false,
-          actionSuccessMsg: 'Turf facility registered successfully! Pending admin approval.',
-        ));
+        emit(
+          currentState.copyWith(
+            turfs: list,
+            isActionInProgress: false,
+            actionSuccessMsg:
+                'Turf facility registered successfully! Pending admin approval.',
+          ),
+        );
       } catch (e) {
-        emit(currentState.copyWith(
-          isActionInProgress: false,
-          actionError: e.toString().replaceAll('Exception: ', ''),
-        ));
+        emit(
+          currentState.copyWith(
+            isActionInProgress: false,
+            actionError: e.toString().replaceAll('Exception: ', ''),
+          ),
+        );
       }
     }
   }
 
-  Future<void> _onAddCourt(AddCourtRequested event, Emitter<OwnerState> emit) async {
+  Future<void> _onAddCourt(
+    AddCourtRequested event,
+    Emitter<OwnerState> emit,
+  ) async {
     final currentState = state;
     if (currentState is OwnerLoaded) {
       emit(currentState.copyWith(isActionInProgress: true, clearStatus: true));
@@ -254,53 +283,81 @@ class OwnerBloc extends Bloc<OwnerEvent, OwnerState> {
         );
 
         final list = await _ownerRepository.getOwnerTurfs();
-        emit(currentState.copyWith(
-          turfs: list,
-          isActionInProgress: false,
-          actionSuccessMsg: 'Court/pitch added successfully!',
-        ));
+        emit(
+          currentState.copyWith(
+            turfs: list,
+            isActionInProgress: false,
+            actionSuccessMsg: 'Court/pitch added successfully!',
+          ),
+        );
       } catch (e) {
-        emit(currentState.copyWith(
-          isActionInProgress: false,
-          actionError: e.toString().replaceAll('Exception: ', ''),
-        ));
+        emit(
+          currentState.copyWith(
+            isActionInProgress: false,
+            actionError: e.toString().replaceAll('Exception: ', ''),
+          ),
+        );
       }
     }
   }
 
-  Future<void> _onGenerateSlots(GenerateSlotsRequested event, Emitter<OwnerState> emit) async {
+  Future<void> _onGenerateSlots(
+    GenerateSlotsRequested event,
+    Emitter<OwnerState> emit,
+  ) async {
     final currentState = state;
     if (currentState is OwnerLoaded) {
       emit(currentState.copyWith(isActionInProgress: true, clearStatus: true));
       try {
-        final result = await _ownerRepository.generateSlots(event.turfId, event.startDate, event.endDate);
+        final result = await _ownerRepository.generateSlots(
+          event.turfId,
+          event.startDate,
+          event.endDate,
+        );
         final count = result['count'] ?? 0;
-        emit(currentState.copyWith(
-          isActionInProgress: false,
-          actionSuccessMsg: 'Successfully generated $count slots matching templates date ranges!',
-        ));
+        emit(
+          currentState.copyWith(
+            isActionInProgress: false,
+            actionSuccessMsg:
+                'Successfully generated $count slots matching templates date ranges!',
+          ),
+        );
       } catch (e) {
-        emit(currentState.copyWith(
-          isActionInProgress: false,
-          actionError: e.toString().replaceAll('Exception: ', ''),
-        ));
+        emit(
+          currentState.copyWith(
+            isActionInProgress: false,
+            actionError: e.toString().replaceAll('Exception: ', ''),
+          ),
+        );
       }
     }
   }
 
-  Future<void> _onLoadCourtTemplates(LoadCourtTemplatesRequested event, Emitter<OwnerState> emit) async {
+  Future<void> _onLoadCourtTemplates(
+    LoadCourtTemplatesRequested event,
+    Emitter<OwnerState> emit,
+  ) async {
     final currentState = state;
     if (currentState is OwnerLoaded) {
       try {
-        final templates = await _ownerRepository.getCourtTemplates(event.courtId);
+        final templates = await _ownerRepository.getCourtTemplates(
+          event.courtId,
+        );
         emit(currentState.copyWith(templates: templates));
       } catch (e) {
-        emit(currentState.copyWith(actionError: e.toString().replaceAll('Exception: ', '')));
+        emit(
+          currentState.copyWith(
+            actionError: e.toString().replaceAll('Exception: ', ''),
+          ),
+        );
       }
     }
   }
 
-  Future<void> _onCreateCourtTemplate(CreateCourtTemplateRequested event, Emitter<OwnerState> emit) async {
+  Future<void> _onCreateCourtTemplate(
+    CreateCourtTemplateRequested event,
+    Emitter<OwnerState> emit,
+  ) async {
     final currentState = state;
     if (currentState is OwnerLoaded) {
       emit(currentState.copyWith(isActionInProgress: true, clearStatus: true));
@@ -313,36 +370,49 @@ class OwnerBloc extends Bloc<OwnerEvent, OwnerState> {
           event.priceOverride,
         );
 
-        final templates = await _ownerRepository.getCourtTemplates(event.courtId);
-        emit(currentState.copyWith(
-          templates: templates,
-          isActionInProgress: false,
-          actionSuccessMsg: 'Slot template added successfully!',
-        ));
+        final templates = await _ownerRepository.getCourtTemplates(
+          event.courtId,
+        );
+        emit(
+          currentState.copyWith(
+            templates: templates,
+            isActionInProgress: false,
+            actionSuccessMsg: 'Slot template added successfully!',
+          ),
+        );
       } catch (e) {
-        emit(currentState.copyWith(
-          isActionInProgress: false,
-          actionError: e.toString().replaceAll('Exception: ', ''),
-        ));
+        emit(
+          currentState.copyWith(
+            isActionInProgress: false,
+            actionError: e.toString().replaceAll('Exception: ', ''),
+          ),
+        );
       }
     }
   }
 
-  Future<void> _onLoadOwnerAnalytics(LoadOwnerAnalyticsRequested event, Emitter<OwnerState> emit) async {
+  Future<void> _onLoadOwnerAnalytics(
+    LoadOwnerAnalyticsRequested event,
+    Emitter<OwnerState> emit,
+  ) async {
     final currentState = state;
     if (currentState is OwnerLoaded) {
       emit(currentState.copyWith(isActionInProgress: true, clearStatus: true));
       try {
         final analytics = await _ownerRepository.getOwnerAnalytics();
-        emit(currentState.copyWith(
-          analytics: analytics,
-          isActionInProgress: false,
-        ));
+        emit(
+          currentState.copyWith(
+            analytics: analytics,
+            isActionInProgress: false,
+          ),
+        );
       } catch (e) {
-        emit(currentState.copyWith(
-          isActionInProgress: false,
-          actionError: e.toString().replaceAll('Exception: ', ''),
-        ));
+        emit(
+          currentState.copyWith(
+            isActionInProgress: false,
+            actionError: e.toString().replaceAll('Exception: ', ''),
+          ),
+        );
       }
     }
   }

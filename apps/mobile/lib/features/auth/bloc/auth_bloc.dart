@@ -7,7 +7,7 @@ import '../repositories/auth_repository.dart';
 // ==========================================
 abstract class AuthState extends Equatable {
   const AuthState();
-  
+
   @override
   List<Object?> get props => [];
 }
@@ -51,11 +51,12 @@ class AppStarted extends AuthEvent {}
 class LoginRequested extends AuthEvent {
   final String email;
   final String password;
+  final String accountType;
 
-  const LoginRequested(this.email, this.password);
+  const LoginRequested(this.email, this.password, {required this.accountType});
 
   @override
-  List<Object?> get props => [email, password];
+  List<Object?> get props => [email, password, accountType];
 }
 
 class RegisterRequested extends AuthEvent {
@@ -63,11 +64,27 @@ class RegisterRequested extends AuthEvent {
   final String password;
   final String name;
   final String? phone;
+  final String accountType;
+  final String? businessName;
 
-  const RegisterRequested(this.email, this.password, this.name, this.phone);
+  const RegisterRequested(
+    this.email,
+    this.password,
+    this.name,
+    this.phone, {
+    required this.accountType,
+    this.businessName,
+  });
 
   @override
-  List<Object?> get props => [email, password, name, phone];
+  List<Object?> get props => [
+    email,
+    password,
+    name,
+    phone,
+    accountType,
+    businessName,
+  ];
 }
 
 class LogoutRequested extends AuthEvent {}
@@ -108,10 +125,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
+  Future<void> _onLoginRequested(
+    LoginRequested event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
     try {
-      await _authRepository.login(event.email, event.password);
+      await _authRepository.login(
+        event.email,
+        event.password,
+        accountType: event.accountType,
+      );
       final user = await _authRepository.getProfile();
       emit(Authenticated(user));
     } catch (e) {
@@ -119,10 +143,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _onRegisterRequested(RegisterRequested event, Emitter<AuthState> emit) async {
+  Future<void> _onRegisterRequested(
+    RegisterRequested event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
     try {
-      await _authRepository.register(event.email, event.password, event.name, phone: event.phone);
+      await _authRepository.register(
+        event.email,
+        event.password,
+        event.name,
+        phone: event.phone,
+        accountType: event.accountType,
+        businessName: event.businessName,
+      );
       final user = await _authRepository.getProfile();
       emit(Authenticated(user));
     } catch (e) {
@@ -130,26 +164,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
+  Future<void> _onLogoutRequested(
+    LogoutRequested event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
     await _authRepository.logout();
     emit(Unauthenticated());
   }
 
-  Future<void> _onRefreshProfile(RefreshProfileRequested event, Emitter<AuthState> emit) async {
+  Future<void> _onRefreshProfile(
+    RefreshProfileRequested event,
+    Emitter<AuthState> emit,
+  ) async {
     try {
       final user = await _authRepository.getProfile();
       emit(Authenticated(user));
     } catch (e) {
       // Don't log out on random network failures, only if auth fails
-      if (e.toString().contains('Unauthorized') || e.toString().contains('401')) {
+      if (e.toString().contains('Unauthorized') ||
+          e.toString().contains('401')) {
         await _authRepository.logout();
         emit(Unauthenticated());
       }
     }
   }
 
-  Future<void> _onApplyForOwner(ApplyForOwnerRequested event, Emitter<AuthState> emit) async {
+  Future<void> _onApplyForOwner(
+    ApplyForOwnerRequested event,
+    Emitter<AuthState> emit,
+  ) async {
     if (state is Authenticated) {
       try {
         await _authRepository.applyForOwner(event.businessName);

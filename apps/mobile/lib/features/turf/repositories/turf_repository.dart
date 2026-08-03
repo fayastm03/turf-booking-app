@@ -32,9 +32,9 @@ class TurfRepository {
       final response = await _apiClient.dio.get(
         '/turfs',
         queryParameters: {
-          if (cityId != null) 'cityId': cityId,
-          if (sportId != null) 'sportId': sportId,
-          if (search != null) 'search': search,
+          'cityId': ?cityId,
+          'sportId': ?sportId,
+          'search': ?search,
         },
       );
       final data = response.data as List<dynamic>;
@@ -81,7 +81,7 @@ class TurfRepository {
         '/turfs/$turfId/reviews',
         data: {
           'rating': rating,
-          if (comment != null) 'comment': comment,
+          'comment': ?comment,
         },
       );
       return response.data;

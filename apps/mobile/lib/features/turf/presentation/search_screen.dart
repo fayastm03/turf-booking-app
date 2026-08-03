@@ -63,7 +63,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     const SizedBox(height: 16),
 
                     // 2. Recent Searches
-                    if (state.recentSearches.isNotEmpty) _buildRecentSearches(context, state.recentSearches),
+                    if (state.recentSearches.isNotEmpty)
+                      _buildRecentSearches(context, state.recentSearches),
 
                     const SizedBox(height: 16),
 
@@ -78,7 +79,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: Colors.white,
                           ),
                         ),
-                        if (state.selectedCityId != null || state.selectedSportId != null || state.selectedCourtType != null)
+                        if (state.selectedCityId != null ||
+                            state.selectedSportId != null ||
+                            state.selectedCourtType != null)
                           GestureDetector(
                             onTap: () {
                               context.read<SearchBloc>().add(ClearAllFilters());
@@ -97,9 +100,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     const SizedBox(height: 12),
 
                     // 4. Search Results Scroll List
-                    Expanded(
-                      child: _buildResultsList(context, state.results),
-                    ),
+                    Expanded(child: _buildResultsList(context, state.results)),
                   ],
                 ),
               );
@@ -112,7 +113,11 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildSearchBar(BuildContext context, ThemeData theme, SearchLoaded state) {
+  Widget _buildSearchBar(
+    BuildContext context,
+    ThemeData theme,
+    SearchLoaded state,
+  ) {
     final primaryColor = theme.colorScheme.primary;
 
     return Row(
@@ -142,7 +147,11 @@ class _SearchScreenState extends State<SearchScreen> {
                       filled: false,
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
-                              icon: const Icon(Icons.clear, color: Colors.white38, size: 18),
+                              icon: const Icon(
+                                Icons.clear,
+                                color: Colors.white38,
+                                size: 18,
+                              ),
                               onPressed: () {
                                 _searchController.clear();
                                 _onSearch('');
@@ -167,7 +176,10 @@ class _SearchScreenState extends State<SearchScreen> {
               color: const Color(0xFF151D30),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: (state.selectedCityId != null || state.selectedSportId != null || state.selectedCourtType != null)
+                color:
+                    (state.selectedCityId != null ||
+                        state.selectedSportId != null ||
+                        state.selectedCourtType != null)
                     ? primaryColor
                     : Colors.transparent,
                 width: 1.5,
@@ -176,7 +188,10 @@ class _SearchScreenState extends State<SearchScreen> {
             padding: const EdgeInsets.all(12),
             child: Icon(
               Icons.tune,
-              color: (state.selectedCityId != null || state.selectedSportId != null || state.selectedCourtType != null)
+              color:
+                  (state.selectedCityId != null ||
+                      state.selectedSportId != null ||
+                      state.selectedCourtType != null)
                   ? primaryColor
                   : Colors.white70,
             ),
@@ -187,8 +202,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildRecentSearches(BuildContext context, List<String> searches) {
-    final theme = Theme.of(context);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -197,13 +210,21 @@ class _SearchScreenState extends State<SearchScreen> {
           children: [
             const Text(
               'Recent Searches',
-              style: TextStyle(color: Colors.white60, fontSize: 13, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white60,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             GestureDetector(
               onTap: () {
                 context.read<SearchBloc>().add(ClearRecentSearchesRequested());
               },
-              child: const Icon(Icons.delete_outline, color: Colors.white30, size: 18),
+              child: const Icon(
+                Icons.delete_outline,
+                color: Colors.white30,
+                size: 18,
+              ),
             ),
           ],
         ),
@@ -219,7 +240,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 padding: const EdgeInsets.only(right: 8.0),
                 child: ActionChip(
                   label: Text(term),
-                  labelStyle: const TextStyle(color: Colors.white70, fontSize: 12),
+                  labelStyle: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
                   backgroundColor: const Color(0xFF151D30),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
@@ -276,13 +300,16 @@ class _SearchScreenState extends State<SearchScreen> {
                   Stack(
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
                         child: CachedNetworkImage(
                           imageUrl: photoUrl,
                           height: 150,
                           width: double.infinity,
                           fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(color: Colors.white10),
+                          placeholder: (context, url) =>
+                              Container(color: Colors.white10),
                         ),
                       ),
                       Positioned(
@@ -290,10 +317,13 @@ class _SearchScreenState extends State<SearchScreen> {
                         right: 12,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.6),
+                            color: Colors.black.withValues(alpha: 0.6),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           child: const Row(
                             children: [
                               Icon(Icons.star, color: Colors.amber, size: 14),
@@ -354,28 +384,46 @@ class _SearchScreenState extends State<SearchScreen> {
                           children: [
                             const Row(
                               children: [
-                                Icon(Icons.check_circle_outline, color: Colors.green, size: 16),
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  color: Colors.green,
+                                  size: 16,
+                                ),
                                 SizedBox(width: 4),
                                 Text(
                                   'Available Today',
-                                  style: TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             ),
                             // Sport Category Icon Tag
                             Container(
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.06),
+                                color: Colors.white.withValues(alpha: 0.06),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                               child: const Row(
                                 children: [
-                                  Icon(Icons.sports_soccer, size: 14, color: Colors.white60),
+                                  Icon(
+                                    Icons.sports_soccer,
+                                    size: 14,
+                                    color: Colors.white60,
+                                  ),
                                   SizedBox(width: 4),
                                   Text(
                                     'Football',
-                                    style: TextStyle(color: Colors.white60, fontSize: 11),
+                                    style: TextStyle(
+                                      color: Colors.white60,
+                                      fontSize: 11,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -433,7 +481,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     children: [
                       const Text(
                         'Filters & Sort',
-                        style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.close, color: Colors.white70),
@@ -444,7 +496,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   const SizedBox(height: 16),
 
                   // 1. Sort By Options
-                  const Text('Sort By', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Sort By',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -452,19 +511,22 @@ class _SearchScreenState extends State<SearchScreen> {
                       _buildFilterChip(
                         label: 'Name (A-Z)',
                         selected: tempSortBy == 'name_asc',
-                        onSelected: (_) => setStateSheet(() => tempSortBy = 'name_asc'),
+                        onSelected: (_) =>
+                            setStateSheet(() => tempSortBy = 'name_asc'),
                         primaryColor: primaryColor,
                       ),
                       _buildFilterChip(
                         label: 'Price: Low to High',
                         selected: tempSortBy == 'price_asc',
-                        onSelected: (_) => setStateSheet(() => tempSortBy = 'price_asc'),
+                        onSelected: (_) =>
+                            setStateSheet(() => tempSortBy = 'price_asc'),
                         primaryColor: primaryColor,
                       ),
                       _buildFilterChip(
                         label: 'Price: High to Low',
                         selected: tempSortBy == 'price_desc',
-                        onSelected: (_) => setStateSheet(() => tempSortBy = 'price_desc'),
+                        onSelected: (_) =>
+                            setStateSheet(() => tempSortBy = 'price_desc'),
                         primaryColor: primaryColor,
                       ),
                     ],
@@ -472,7 +534,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   const SizedBox(height: 20),
 
                   // 2. City Filter
-                  const Text('Select City', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Select City',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -480,14 +549,16 @@ class _SearchScreenState extends State<SearchScreen> {
                       _buildFilterChip(
                         label: 'All Cities',
                         selected: tempCityId == null,
-                        onSelected: (_) => setStateSheet(() => tempCityId = null),
+                        onSelected: (_) =>
+                            setStateSheet(() => tempCityId = null),
                         primaryColor: primaryColor,
                       ),
                       ...homeState.cities.map((city) {
                         return _buildFilterChip(
                           label: city.name,
                           selected: tempCityId == city.id,
-                          onSelected: (_) => setStateSheet(() => tempCityId = city.id),
+                          onSelected: (_) =>
+                              setStateSheet(() => tempCityId = city.id),
                           primaryColor: primaryColor,
                         );
                       }),
@@ -496,7 +567,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   const SizedBox(height: 20),
 
                   // 3. Sport Filter
-                  const Text('Sport Category', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Sport Category',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -504,14 +582,16 @@ class _SearchScreenState extends State<SearchScreen> {
                       _buildFilterChip(
                         label: 'All Sports',
                         selected: tempSportId == null,
-                        onSelected: (_) => setStateSheet(() => tempSportId = null),
+                        onSelected: (_) =>
+                            setStateSheet(() => tempSportId = null),
                         primaryColor: primaryColor,
                       ),
                       ...homeState.sports.map((sport) {
                         return _buildFilterChip(
                           label: sport.name,
                           selected: tempSportId == sport.id,
-                          onSelected: (_) => setStateSheet(() => tempSportId = sport.id),
+                          onSelected: (_) =>
+                              setStateSheet(() => tempSportId = sport.id),
                           primaryColor: primaryColor,
                         );
                       }),
@@ -520,7 +600,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   const SizedBox(height: 20),
 
                   // 4. Court Type
-                  const Text('Court Surface Type', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Court Surface Type',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -528,19 +615,22 @@ class _SearchScreenState extends State<SearchScreen> {
                       _buildFilterChip(
                         label: 'All Surfaces',
                         selected: tempCourtType == null,
-                        onSelected: (_) => setStateSheet(() => tempCourtType = null),
+                        onSelected: (_) =>
+                            setStateSheet(() => tempCourtType = null),
                         primaryColor: primaryColor,
                       ),
                       _buildFilterChip(
                         label: 'Indoor',
                         selected: tempCourtType == 'Indoor',
-                        onSelected: (_) => setStateSheet(() => tempCourtType = 'Indoor'),
+                        onSelected: (_) =>
+                            setStateSheet(() => tempCourtType = 'Indoor'),
                         primaryColor: primaryColor,
                       ),
                       _buildFilterChip(
                         label: 'Outdoor',
                         selected: tempCourtType == 'Outdoor',
-                        onSelected: (_) => setStateSheet(() => tempCourtType = 'Outdoor'),
+                        onSelected: (_) =>
+                            setStateSheet(() => tempCourtType = 'Outdoor'),
                         primaryColor: primaryColor,
                       ),
                     ],
@@ -559,9 +649,17 @@ class _SearchScreenState extends State<SearchScreen> {
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Colors.white24),
                             padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                          child: const Text('Reset All', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold)),
+                          child: const Text(
+                            'Reset All',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -569,22 +667,27 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             context.read<SearchBloc>().add(
-                                  UpdateFilters(
-                                    cityId: tempCityId ?? 'all',
-                                    sportId: tempSportId ?? 'all',
-                                    courtType: tempCourtType ?? 'all',
-                                    sortBy: tempSortBy,
-                                  ),
-                                );
+                              UpdateFilters(
+                                cityId: tempCityId ?? 'all',
+                                sportId: tempSportId ?? 'all',
+                                courtType: tempCourtType ?? 'all',
+                                sortBy: tempSortBy,
+                              ),
+                            );
                             Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: primaryColor,
                             foregroundColor: theme.colorScheme.onPrimary,
                             padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                          child: const Text('Apply Filters', style: TextStyle(fontWeight: FontWeight.bold)),
+                          child: const Text(
+                            'Apply Filters',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ],
@@ -613,7 +716,7 @@ class _SearchScreenState extends State<SearchScreen> {
         fontSize: 12,
         fontWeight: FontWeight.bold,
       ),
-      backgroundColor: Colors.white.withOpacity(0.04),
+      backgroundColor: Colors.white.withValues(alpha: 0.04),
       selectedColor: primaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),

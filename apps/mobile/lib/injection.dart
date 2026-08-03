@@ -16,10 +16,22 @@ void setupLocator() {
   getIt.registerLazySingleton<LocalStorage>(() => LocalStorage());
 
   // Repositories
-  getIt.registerLazySingleton<AuthRepository>(() => AuthRepository(getIt<ApiClient>()));
-  getIt.registerLazySingleton<BookingRepository>(() => BookingRepository(getIt<ApiClient>()));
-  getIt.registerLazySingleton<TurfRepository>(() => TurfRepository(getIt<ApiClient>()));
-  getIt.registerLazySingleton<WalletRepository>(() => WalletRepository(getIt<ApiClient>()));
-  getIt.registerLazySingleton<NotificationRepository>(() => NotificationRepository(getIt<ApiClient>()));
-  getIt.registerLazySingleton<OwnerRepository>(() => OwnerRepository(getIt<ApiClient>()));
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepository(getIt<ApiClient>()),
+  );
+  getIt.registerLazySingleton<BookingRepository>(
+    () => BookingRepository(getIt<ApiClient>()),
+  );
+  getIt.registerLazySingleton<TurfRepository>(
+    () => TurfRepository(getIt<ApiClient>()),
+  );
+  getIt.registerLazySingleton<WalletRepository>(
+    () => WalletRepository(getIt<ApiClient>()),
+  );
+  getIt.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepository(getIt<ApiClient>()),
+  );
+  getIt.registerLazySingleton<OwnerRepository>(
+    () => OwnerRepository(getIt<ApiClient>()),
+  );
 }

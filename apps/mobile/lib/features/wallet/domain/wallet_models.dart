@@ -56,8 +56,11 @@ class Wallet {
       id: json['id'] as String,
       userId: json['userId'] as String,
       balance: (json['balance'] as num).toDouble(),
-      transactions: (json['transactions'] as List<dynamic>?)
-              ?.map((e) => WalletTransaction.fromJson(e as Map<String, dynamic>))
+      transactions:
+          (json['transactions'] as List<dynamic>?)
+              ?.map(
+                (e) => WalletTransaction.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           [],
     );
